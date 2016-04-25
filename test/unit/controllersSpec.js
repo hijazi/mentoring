@@ -39,7 +39,7 @@
 // 			});
 // 	});
 
-	
+
 
 // });
 
@@ -56,70 +56,54 @@
 // 		}));
 
 // 		it('should return text in an array with specfic size without cutting words in half', function{
-			
+
 
 // 		});
 
 // });
 
 
-describe('textSplit service', function (){
-	beforeEach(module('textSplit'));
-	describe('getSplitData', function(){
-		var getSplitData,charactersFilter, text;
-
-		beforeEach(inject(function(_textSplit_, _charactersFilter_) {
-			textSplit = _textSplit_;
-			charactersFilter = _charactersFilter_;
-		}));
-
-		it('should do something', function() {
-			text = textSplit.getSplitData('12345 12345',7);
-			expect(text).toEqual(['12345', '12345']);
-		})
-	});
-
-});
 
 
-describe('truncate', function () {
 
-    beforeEach(module('truncate'));
+// describe('truncate', function () {
 
-    describe('characters', function () {
-        var characterFilter;
+//     beforeEach(module('truncate'));
 
-        beforeEach(inject(function ($filter) {
-            characterFilter = $filter('characters');
-        }));
+//     describe('characters', function () {
+//         var characterFilter;
 
-        it('should do nothing to this string', function () {
-            expect(characterFilter('1234567890')).toEqual('1234567890');
-        });
+//         beforeEach(inject(function ($filter) {
+//             characterFilter = $filter('characters');
+//         }));
 
-        it('should fail', function () {
-            expect(characterFilter(null, 30)).toNotEqual('1234567890');
-        });
+//         it('should do nothing to this string', function () {
+//             expect(characterFilter('1234567890')).toEqual('1234567890');
+//         });
 
-        it('should not trim these down', function () {
-            expect(characterFilter('1234567890', 30)).toEqual('1234567890');
-        });
+//         it('should fail', function () {
+//             expect(characterFilter(null, 30)).toNotEqual('1234567890');
+//         });
 
-        it('should trim these down', function () {
-            expect(characterFilter('1234567890', 5)).toEqual('12345');
-        });
+//         it('should not trim these down', function () {
+//             expect(characterFilter('1234567890', 30)).toEqual('1234567890');
+//         });
 
-        it('should trim this down including the space', function () {
-            expect(characterFilter('123456789 10 11 12 13 14', 13)).toEqual('123456789 10');
-        });
+//         it('should trim these down', function () {
+//             expect(characterFilter('1234567890', 5)).toEqual('12345');
+//         });
 
-        it('should handle invalid numbers', function () {
-            expect(characterFilter('1234567890', 0)).toEqual('');
-        });
+//         it('should trim this down including the space', function () {
+//             expect(characterFilter('123456789 10 11 12 13 14', 13)).toEqual('123456789 10');
+//         });
 
-        it('should handle invalid chars numbers type', function () {
-            expect(characterFilter('1234567890', 'abc')).toEqual('1234567890');
-        });
-    });
+//         it('should handle invalid numbers', function () {
+//             expect(characterFilter('1234567890', 0)).toEqual('');
+//         });
 
-});
+//         it('should handle invalid chars numbers type', function () {
+//             expect(characterFilter('1234567890', 'abc')).toEqual('1234567890');
+//         });
+//     });
+
+// });

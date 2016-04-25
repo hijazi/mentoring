@@ -1,6 +1,7 @@
 'use strict';
 
 /* App Module */
-var mentoringApp = angular.module('mentoringApp', [
-'mentoringApp.mentoringControllers'
+angular
+.module('mentoringApp', [
+'mentoringControllers'
 	]);

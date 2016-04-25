@@ -3,6 +3,9 @@ angular.module('truncate', [])
         return function (input, chars) {
             if (isNaN(chars)) return input;
             if (chars <= 0) return '';
+            while (input[0] === ' '){
+                input = input.slice(1);
+            };
             if (input && input.length > chars) {
                 input = input.substring(0, chars);
                 var lastspace = input.lastIndexOf(' ');
