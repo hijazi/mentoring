@@ -20,27 +20,26 @@ angular.module('mentoringServices', ['truncate'])
 			// initial check size is number and text is string
 			if (!isNaN(size) && (typeof text === 'string' || text instanceof String) ){
 
-					do {
+				// && text needed for strange behavior entring loop with empty string noticed with unit testing!
+				while ((text.length > 0) && text){
 						// throw away starting sapces
 						while (text[0] === ' '){
 							text = text.slice(1);						
 						};
-						// check if text has at least one word to cut
+						// check if text has at least one word shorter than size to cut
 						firstSpace = text.indexOf(' ');
-						if ((firstSpace <= size) && ((firstSpace !== -1) || (text.length <= size) )) {
+						if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)) )) {
 							// actual work
 							doneText = $filter('characters')(text, size);
 							truncatedLength = doneText.length;
 							text = text.slice(truncatedLength);
 							textArray.push(doneText)
 						} else {
-							// one word beggir than size
-							console.log("thrown away:"+text+";spaceIndex:"+firstSpace);
 							text = '';
 						};
-				} while (text.length > 0);
-			};
-			return textArray;
-		}
-	};
-}]);
+					};
+				};
+				return textArray;
+			}
+		};
+	}]);
