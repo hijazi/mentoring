@@ -4,6 +4,10 @@
 
 describe('textSplit service', function (){
 	var textSplitService, mockcharctersFilter;
+	// var truncationData =
+	// {
+	// 	''
+	// }
 
 	beforeEach(function(){
 		module('mentoringServices');
@@ -17,14 +21,19 @@ describe('textSplit service', function (){
 	});
 
 	mockcharctersFilter = function(text, size) {
+		console.log(text);
+		if (size == 5){
+			console.log('yah');
+		}
 		return '12345';
 	};
 
     // it function
 
-    var text;
-    it('Should split data and return text in an array of strings', function() {
-    	text = textSplitService.getSplitData('12345 12345',5);
-    	expect(text).toEqual(['12345', '12345']);
-    })
+    var splitArray;
+    it('Should return empty array without calling the filter', function() {
+    	splitArray = textSplitService.getSplitData('OneWordLognerThanFive',5);
+    	expect(splitArray).toEqual([]);
+    });
+
 });

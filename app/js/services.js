@@ -9,32 +9,38 @@ angular.module('mentoringServices', ['truncate'])
 .factory('textSplit', ['$filter', function($filter) {
 	return {
 		getSplitData: function(enteredText, size) {
-			var text = enteredText || 'No text abailable!';
-			var doneText = '';
-			var truncatedLength = 0;
-			var textArray = [];
 
-			
+			// variables declaration and intialization
+			var text = enteredText
+			,	doneText = ''
+			,	truncatedLength = 0
+			,	textArray = []
+			,	firstSpace;
 
-			if ( (!(NaN === size)) && text){
-				var i=0;
-				while (text.length > 0){
-					if (text[0] === ' '){
-						text = text.slice(1);						
-					};
+			// initial check size is number and text is string
+			if (!isNaN(size) && (typeof text === 'string' || text instanceof String) ){
 
-					doneText = $filter('characters')(text, size);
-					truncatedLength = doneText.length;
-					text = text.slice(truncatedLength);
-					textArray.push(doneText)
-				}
-
-
-			}
-
+					do {
+						// throw away starting sapces
+						while (text[0] === ' '){
+							text = text.slice(1);						
+						};
+						// check if text has at least one word to cut
+						firstSpace = text.indexOf(' ');
+						if ((firstSpace <= size) && ((firstSpace !== -1) || (text.length <= size) )) {
+							// actual work
+							doneText = $filter('characters')(text, size);
+							truncatedLength = doneText.length;
+							text = text.slice(truncatedLength);
+							textArray.push(doneText)
+						} else {
+							// one word beggir than size
+							console.log("thrown away:"+text+";spaceIndex:"+firstSpace);
+							text = '';
+						};
+				} while (text.length > 0);
+			};
 			return textArray;
 		}
-
-
-	}
+	};
 }]);

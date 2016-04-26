@@ -20,7 +20,7 @@ $http.get('data/mentorsInfo.json').success(function(data) {
             // console.log(data);
             angular.forEach($scope.mentors, function(mentor) {
                 //console.log(textSplit.getSplitData(mentor.bio, 30));
-                mentor.newBio = textSplit.getSplitData(mentor.bio, 5);
+                mentor.newBio = textSplit.getSplitData(mentor.bio, 30);
             });
             console.log('fetched');
             // return data.response;

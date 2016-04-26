@@ -29,7 +29,7 @@ describe('truncate', function () {
             expect(characterFilter('1234567890', 5)).toEqual('12345');
         });
         it('should ignore the starting spaces', function () {
-        	expect(characterFilter('   123', 3).toEqual('123');
+        	expect(characterFilter('   123', 3)).toEqual('123');
         });
 
         it('should trim this down including the space', function () {
