@@ -4,10 +4,6 @@
 
 describe('textSplit service', function (){
 	var textSplitService, mockcharctersFilter;
-	// var truncationData =
-	// {
-	// 	''
-	// }
 
 	beforeEach(function(){
 		module('mentoringServices');
@@ -20,9 +16,8 @@ describe('textSplit service', function (){
 
 	});
 
+	// the mock returns entered text and you should act as the service's own logic
 	mockcharctersFilter = function(text, size) {
-		// the mock returns entered text and you should act as the service's own logic
-		console.log("text:"+text+";size:"+size);
 		// one test case demands this which is right and separability tested behavior
 		if ((text === "good experience") && size < text.length){
 			text = "good";

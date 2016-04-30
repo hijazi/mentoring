@@ -17,14 +17,20 @@ angular
 // console.log(textSplit);
 $http.get('data/mentorsInfo.json').success(function(data) {
     $scope.mentors = data;
-            // console.log(data);
-            angular.forEach($scope.mentors, function(mentor) {
-                //console.log(textSplit.getSplitData(mentor.bio, 30));
-                mentor.newBio = textSplit.getSplitData(mentor.bio, 30);
-            });
-            console.log('fetched');
-            // return data.response;
-        }),
+    var text
+    ,   doneText;
+
+    angular.forEach($scope.mentors, function(mentor) {
+        mentor.newBio = textSplit.getSplitData(mentor.bio, 500);
+        text = mentor.newBio[0];
+        text = textSplit.helperStripHtml(text);console.log(text);
+
+        console.log("\\r i:"+text.indexOf("\\r")+"&nbsp; i:"+text.indexOf("&nbsp;"));
+
+
+    });
+    console.log('fetched');
+}),
 function myError(response) {
     console.log('not fetched');
 };
@@ -33,3 +39,5 @@ function myError(response) {
 
 
 }]);
+
+// now you're splitting beform stripping but you need to know where to split after striping
