@@ -50,18 +50,33 @@ angular.module('mentoringServices', ['truncate'])
 			};
 			return textArray;
 		},
+		getThrownText: function(text, regEx) {
+			var thrownText = ""
+			,	match;
+
+			while ((match = regEx.exec(text)) != null) {
+				thrownText += match[0];
+			}
+			return thrownText;
+		},
 		helperStripHtml: function(formatedText) {
 			var regExTag = /(<([^>]+)>)/ig
 			,   regExSpcae = /(&([^;]+);)/ig
 			,	regExNewLine = /\r?\n|\r/g
+			,	thrownText = ""
 			,   doneText;
 
-
+			thrownText += this.getThrownText(formatedText, regExTag);
 			doneText = formatedText.replace(regExTag, "");
+
+			thrownText += this.getThrownText(formatedText, regExNewLine);
 			doneText = doneText.replace(regExNewLine, "");
+
+			thrownText += this.getThrownText(formatedText, regExSpcae);
 			doneText = doneText.replace(regExSpcae, "");
-			
-			return doneText;
+			var obj = {done: doneText,thrown: thrownText};
+			return  obj;
 		}
+		
 	};
 }]);

@@ -18,16 +18,21 @@ angular
 $http.get('data/mentorsInfo.json').success(function(data) {
     $scope.mentors = data;
     var text
+    ,   obj
     ,   doneText;
 
     angular.forEach($scope.mentors, function(mentor) {
         mentor.newBio = textSplit.getSplitData(mentor.bio, 500);
         text = mentor.newBio[0];
-        text = textSplit.helperStripHtml(text);console.log(text);
-
-        console.log("\\r i:"+text.indexOf("\\r")+"&nbsp; i:"+text.indexOf("&nbsp;"));
-
-
+        console.log("t.len:"+text.length+"t:"+text);
+        obj = textSplit.helperStripHtml(text);
+        console.log(obj);
+        text = obj.done;
+        var thrown = obj.thrown;
+        var textLen = text.length;
+        var thrownLen = thrown.length;
+        var sum = textLen+thrownLen;
+        console.log("t.len:"+textLen+"thrown.len:"+thrownLen+"sum:"+sum+"t:"+text);
     });
     console.log('fetched');
 }),
