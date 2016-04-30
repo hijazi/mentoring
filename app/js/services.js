@@ -22,7 +22,6 @@ angular.module('mentoringServices', ['truncate'])
 
 			// initial check size is number and text is string
 			if (!isNaN(size) && (typeof text === 'string' || text instanceof String) ){
-				text = text.slice(0, size);
 				// && text needed for strange behavior entring loop with empty string noticed with unit testing!
 				while ((text.length > 0) && text){
 					// throw away starting sapces

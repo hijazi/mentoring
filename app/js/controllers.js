@@ -18,21 +18,31 @@ angular
 $http.get('data/mentorsInfo.json').success(function(data) {
     $scope.mentors = data;
     var text
+    ,   thrown
+    ,   textLen
+    ,   thrownLen
+    ,   sum
     ,   obj
+    ,   splitText
     ,   doneText;
 
     angular.forEach($scope.mentors, function(mentor) {
         mentor.newBio = textSplit.getSplitData(mentor.bio, 500);
-        text = mentor.newBio[0];
-        console.log("t.len:"+text.length+"t:"+text);
+        text = mentor.bio;
+        // console.log("t.len:"+text.length+"t:"+text);
+        console.log("t.len:"+text.length);
         obj = textSplit.helperStripHtml(text);
-        console.log(obj);
+        // console.log(obj);
         text = obj.done;
-        var thrown = obj.thrown;
-        var textLen = text.length;
-        var thrownLen = thrown.length;
-        var sum = textLen+thrownLen;
-        console.log("t.len:"+textLen+"thrown.len:"+thrownLen+"sum:"+sum+"t:"+text);
+        thrown = obj.thrown;
+        textLen = text.length;
+        thrownLen = thrown.length;
+        sum = textLen+thrownLen;
+        splitText = textSplit.getSplitData(text, 500);
+        mentor.splitText = splitText;
+        // console.log("t.len:"+textLen+"thrown.len:"+thrownLen+"sum:"+sum+"t:"+text);
+        console.log("t.len:"+textLen+"thrown.len:"+thrownLen+"sum:"+sum);
+        console.log("mS:"+mentor.splitText);
     });
     console.log('fetched');
 }),
