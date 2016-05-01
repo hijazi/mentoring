@@ -123,11 +123,14 @@ angular.module('mentoringServices', ['truncate'])
 		// today
 		getPlane: function(text) {
 			var result = 0;
-			if (text){
+			if ((typeof text === 'string' || text instanceof String) && (text.length > 0) ){
 				//clean text
 				var regEx = /(&([^;]+);|\r?\n|\r)/ig;
 				text = text.replace(regEx, "");
 				result = text.length;
+			} else {
+				result = "";
+				//console.log("getPlane not text:"+text);
 			}
 			return result;
 		},
@@ -142,30 +145,12 @@ angular.module('mentoringServices', ['truncate'])
 
 		// today
 		getClosingTags: function(text, depth) {
-			var regEx = /(<([^>]+)>)/ig
+			var match,
+				regEx = /(<([^>]+)>)/ig
 			,	internalDepth = 0
 			,	requestedTags = "";
 			while ((match = regEx.exec(text)) != null){
-				if (tagType(match[0]) === "open"){
-					internalDepth++;
-				} else{
-					if (internalDepth === 0){
-						requestedTags += match[0];
-					} else{
-						internalDepth--;
-					}
-				}
-			}
-			return requestedTags;
-		},
-
-		// today
-		getClosingTags: function(text){
-			var regEx = /(<([^>]+)>)/ig
-			,	internalDepth = 0
-			,	requestedTags = "";
-			while ((match = regEx.exec(text)) != null){
-				if (tagType(match[0]) === "open"){
+				if (this.tagType(match[0]) === "open"){
 					internalDepth++;
 				} else{
 					if (internalDepth === 0){
@@ -180,7 +165,8 @@ angular.module('mentoringServices', ['truncate'])
 
 		// today to test
 		splitFormatted: function(text, size) {
-			var regEx = /(<([^>]+)>)/ig
+			var match
+			,	regEx = /(<([^>]+)>)/ig
 			,	planeLength = 0
 			,	remainingSize = size
 			,	planeText = ""
@@ -189,29 +175,33 @@ angular.module('mentoringServices', ['truncate'])
 			,	terminatingTags = ""
 			,	openDepth = 0
 			,	requestedFormattedText = ""
-			,	openTags = [];
+			,	openTags = []
+			,	stillOpenedTags;
 
 			while ((match = regEx.exec(text)) != null) {
 
 				// dangerous
-				if (tagType(match[0]) === "open"){
+				if (this.tagType(match[0]) === "open"){
 					openDepth++;
 					openTags.push(match[0]);
-				} else if (tagType(match[0]) === "close"){
+				} else if (this.tagType(match[0]) === "close"){
 					openDepth--;
 					openTags.pop();
 				} else {
 					// should'nt get here
-					console.log("tagType");
+					console.log("this.tagType");
 				}
-				planeText = getPlane(text.split(lastTagEnd,match.index));
+				planeText = this.getPlane(text.slice(lastTagEnd,match.index));
+				// console.log("sent:"+text.slice(lastTagEnd,match.index)+";last:"+lastTagEnd+";match.index:"+match.index);
+				console.log(text.slice(lastTagEnd,match.index));
+				console.log(";last:"+lastTagEnd+";match.index:"+match.index+"\n\n\n\n\n\n\n\n\n");
 				if (planeText.length < remainingSize){
 					remainingSize -= planeText.length;	
 				} else{
 					terminatingPlane = this.splitText(planeText, remainingSize);
-					terminatingTags = getClosingTags(text.split(match.index), openDepth);
+					terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
 					stillOpenedTags = openTags.join("");
-					requestedFormattedText = text.split(0, lastTagEnd) + terminatingPlane + terminatingTags;
+					requestedFormattedText = text.slice(0, lastTagEnd) + terminatingPlane + terminatingTags;
 
 				}
 				lastTagEnd = match.index + match[0].length;
