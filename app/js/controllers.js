@@ -29,6 +29,14 @@ $http.get('data/mentorsInfo.json').success(function(data) {
     angular.forEach($scope.mentors, function(mentor) {
         mentor.newBio = textSplit.getSplitData(mentor.bio, 500);
         text = mentor.bio;
+
+        var obj = textSplit.splitFormatted(text, 500);
+        mentor.testPrev = obj.text;
+
+
+
+
+        /* old work
         // console.log("t.len:"+text.length+"t:"+text);
         console.log("t.len:"+text.length);
         obj = textSplit.helperStripHtml(text);
@@ -42,7 +50,9 @@ $http.get('data/mentorsInfo.json').success(function(data) {
         mentor.splitText = splitText;
         // console.log("t.len:"+textLen+"thrown.len:"+thrownLen+"sum:"+sum+"t:"+text);
         console.log("t.len:"+textLen+"thrown.len:"+thrownLen+"sum:"+sum);
-        console.log("mS:"+mentor.splitText);
+        // console.log("mS:"+mentor.splitText);
+
+        */
     });
     console.log('fetched');
 }),
