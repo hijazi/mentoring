@@ -32,9 +32,9 @@
         <div class="col-md-10">
           {{mentor.name}}<br />
           <!-- <pre>{{mentor.bio}}</pre><br /> -->
-         <pre> {{mentor.newBio}}</pre>
+         <pre> {{mentor.newBio | json}}</pre>
          <hl \>
-<!--          <div class="row thumbnail" ng-repeat="(index,splited) in mentor.splitText">
+         <!-- <div class="row thumbnail" ng-repeat="(index,splited) in mentor.newBio">
          <pre>{{splited}}</pre>
          </div> -->
         </div>

@@ -5,8 +5,8 @@
 *
 * Services for the mentoring app
 */
-angular.module('mentoringServices', ['truncate'])
-.factory('textSplit', ['$filter', function($filter) {
+angular.module('mentoringServices', [])
+.factory('textSplit',  function() {
 	return {
 		// today
 		charactersTruncate: function (text, size) {
@@ -50,11 +50,13 @@ angular.module('mentoringServices', ['truncate'])
 			},
 		// today
 		getPlane: function(text) {
-			var result = 0;
+			var result = 0
+			,	regEx = /(&([^;]+);|\r?\n|\r)/ig
+			,	regExTrim = /^\s+|\s+$/g;
 			if ((typeof text === 'string' || text instanceof String) && (text.length > 0) ){
 				//clean text
-				var regEx = /(&([^;]+);|\r?\n|\r)/ig;
 				text = text.replace(regEx, "");
+				text = text.replace(regExTrim,"");
 				result = text;
 			} else {
 				result = "";
@@ -76,12 +78,14 @@ angular.module('mentoringServices', ['truncate'])
 			regEx = /(<([^>]+)>)/ig
 			,	internalDepth = 0
 			,	requestedTags = "";
-			while ((match = regEx.exec(text)) != null){
+
+			while (((match = regEx.exec(text)) != null) && depth > 0 ){
 				if (this.tagType(match[0]) === "open"){
 					internalDepth++;
 				} else{
 					if (internalDepth === 0){
 						requestedTags += match[0];
+						depth--;
 					} else{
 						internalDepth--;
 					}
@@ -107,6 +111,7 @@ angular.module('mentoringServices', ['truncate'])
 			,	stillOpenedTags = ""
 			,	truncatedLength = 0;
 
+
 			// planeContent = text.replace(planeRegEx,"");
 
 			if (text.length > size){
@@ -114,16 +119,19 @@ angular.module('mentoringServices', ['truncate'])
 				while ((match = regEx.exec(text)) != null) {
 
 					planeText = this.getPlane(text.slice(lastTagEnd,match.index));
-					if (planeText.length < remainingSize){
-						remainingSize -= planeText.length;	
+					if (planeText !== ""){
+						if (planeText.length < remainingSize){
+							remainingSize -= planeText.length;	
+						} else{
+							terminatingPlane = this.splitText(planeText, remainingSize);
+							terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
+							stillOpenedTags = openTags.join("");
+							text = text.slice(0, lastTagEnd) + terminatingPlane;
+							break;
+						}
 					} else{
-						terminatingPlane = this.splitText(planeText, remainingSize);
-						terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
-						stillOpenedTags = openTags.join("");
-						text = text.slice(0, lastTagEnd) + terminatingPlane;
-						break;
+						continue;
 					}
-					// dangerous
 					if (this.tagType(match[0]) === "open"){
 						openDepth++;
 						openTags.push(match[0]);
@@ -131,7 +139,7 @@ angular.module('mentoringServices', ['truncate'])
 						openDepth--;
 						openTags.pop();
 					} else {
-						// should'nt get here
+						// shouldn't get here
 					}
 					lastTagEnd = match.index + match[0].length;
 				}
@@ -143,7 +151,7 @@ angular.module('mentoringServices', ['truncate'])
 		},
 		getSplitData: function(enteredText, size) {
 
-			// variables declaration and intialization
+			// variables declaration and initialization
 			var text = enteredText
 			,	doneText = ''
 			,	truncatedLength = 0
@@ -154,12 +162,16 @@ angular.module('mentoringServices', ['truncate'])
 
 			// initial check size is number and text is string
 			if (!isNaN(size) && (typeof text === 'string' || text instanceof String) ){
-				// && text needed for strange behavior entring loop with empty string noticed with unit testing!
-				if (text.indexOf("<") >= 0){
-					while ((text.length > 0) && text){
-						
+				// && text needed for strange behavior entering loop with empty string noticed with unit testing!
+				while ((text.length > 0) && text){
+
+					// debugger;
+					if (text.indexOf("<") >= 0){
+
 						// check if text has at least one word shorter than size to cut
-						firstSpace = text.indexOf(' ');
+						while ((firstSpace = text.indexOf(' ')) === 0 ){
+							text = text.slice(1);
+						}
 						if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)) )) {
 							// actual work
 							splitResult = this.splitFormatted(text, size);
@@ -179,13 +191,15 @@ angular.module('mentoringServices', ['truncate'])
 						} else {
 							text = '';
 						}
-					}
-				} else{
-					while ((text.length >= 0) && text){
 
-					// check if text has at least one word shorter than size to cut
-					firstSpace = text.indexOf(' ');
-					if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)) )) {
+					} else{
+
+						// check if text has at least one word shorter than size to cut
+						
+						while ((firstSpace = text.indexOf(' ')) === 0 ){
+							text = text.slice(1);
+						}
+						if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)) )) {
 						// actual work
 						splitResult = this.splitText(text, size);
 						doneText = splitResult;
@@ -194,6 +208,7 @@ angular.module('mentoringServices', ['truncate'])
 						textArray.push(doneText);
 					} else {
 						text = '';
+
 					}
 				}
 			}
@@ -202,4 +217,4 @@ angular.module('mentoringServices', ['truncate'])
 		return textArray;
 	}
 };
-}]);
+});
