@@ -25,17 +25,15 @@ angular.module('mentoringServices', [])
         },
 		// today to test
 		splitText: function(enteredText, size){
-			// variables declaration and intialization
+			// variables declaration and initialization
 			var text = enteredText
 			,	doneText = ''
 			,	firstSpace;
 
 			// initial check size is number and text is string
 			if (!isNaN(size) && (typeof text === 'string' || text instanceof String) ){			
-					// throw away starting sapces
-					while (text[0] === ' '){
-						text = text.slice(1);						
-					};
+					// throw away starting spaces
+					text = text.replace(/^\s+/g,"");
 					// check if text has at least one word shorter than size to cut
 					firstSpace = text.indexOf(' ');
 					if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)) )) {
@@ -113,39 +111,52 @@ angular.module('mentoringServices', [])
 
 
 			// planeContent = text.replace(planeRegEx,"");
-
+			debugger;
 			if (text.length > size){
+
+
 
 				while ((match = regEx.exec(text)) != null) {
 
-					planeText = this.getPlane(text.slice(lastTagEnd,match.index));
-					if (planeText !== ""){
-						if (planeText.length < remainingSize){
-							remainingSize -= planeText.length;	
-						} else{
-							terminatingPlane = this.splitText(planeText, remainingSize);
-							terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
-							stillOpenedTags = openTags.join("");
-							text = text.slice(0, lastTagEnd) + terminatingPlane;
-							break;
-						}
-					} else{
-						continue;
-					}
 					if (this.tagType(match[0]) === "open"){
 						openDepth++;
 						openTags.push(match[0]);
-					} else if (this.tagType(match[0]) === "close"){
+					} else if ((this.tagType(match[0]) === "close") && (openDepth > 0)){
 						openDepth--;
 						openTags.pop();
-					} else {
-						// shouldn't get here
+					}else{
+						lastTagEnd = match.index + match[0].length;
+						console.log("match:"+match[0]+"index:"+match.index);
+						continue;
+					}
+
+					planeText = this.getPlane(text.slice(lastTagEnd,match.index));
+					if (planeText.length < remainingSize){
+						remainingSize -= planeText.length;	
+					} else if (planeText.length > remainingSize){
+						terminatingPlane = this.splitText(planeText, remainingSize);
+						if ((terminatingPlane === "") && (openDepth > 0) && (this.tagType(match[0]) === "close") ){
+							terminatingTags = this.getClosingTags(text.slice(match.index+match[0].length), openDepth-1);
+							stillOpenedTags.pop();
+						} else {
+							terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
+						}
+						
+						stillOpenedTags = openTags.join("");
+						text = text.slice(0, lastTagEnd) + terminatingPlane;
+						break;
+					} else if (planeText.length === remainingSize){
+						terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
+						if ((openDepth > 0) && (this.tagType(match[0]) === "close")) {
+							openTags.pop();
+						}
+						stillOpenedTags = openTags.join("");
+						text = text.slice(0, lastTagEnd) + planeText;
 					}
 					lastTagEnd = match.index + match[0].length;
 				}
-				truncatedLength = text.length - terminatingTags.length;
 			}
-			var obj = {text: text,tagsToOpen: stillOpenedTags,tagsToClose:terminatingTags , truncatedLength: truncatedLength};
+			var obj = {text: text,tagsToOpen: stillOpenedTags,tagsToClose:terminatingTags};
 			return obj;	
 
 		},
@@ -153,6 +164,7 @@ angular.module('mentoringServices', [])
 
 			// variables declaration and initialization
 			var text = enteredText
+			,	remainingSize = size
 			,	doneText = ''
 			,	truncatedLength = 0
 			,	textArray = []
@@ -165,52 +177,49 @@ angular.module('mentoringServices', [])
 				// && text needed for strange behavior entering loop with empty string noticed with unit testing!
 				while ((text.length > 0) && text){
 
-					// debugger;
+					debugger;
+
+					// remove starting spaces
+					text = text.replace(/^\s+/g,"");
+
 					if (text.indexOf("<") >= 0){
 
-						// check if text has at least one word shorter than size to cut
-						while ((firstSpace = text.indexOf(' ')) === 0 ){
-							text = text.slice(1);
-						}
-						if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)) )) {
-							// actual work
-							splitResult = this.splitFormatted(text, size);
-							doneText = splitResult.text;
-							truncatedLength = doneText.length;
-							// add closing tags
-							doneText += splitResult.tagsToClose;
-							text = text.slice(truncatedLength);
-							if (text.length === splitResult.tagsToClose.length){
-								// only closing tags remaining
-								text = "";
-							} else{
-								//reformat
-								text = splitResult.tagsToOpen + text;	
-							}
-							textArray.push(doneText);
-						} else {
-							text = '';
-						}
+						
+						// actual work
+						splitResult = this.splitFormatted(text, size);
+						doneText = splitResult.text;
+						
+						// add closing tags
+						doneText += splitResult.tagsToClose;
+						text = text.slice(truncatedLength);
 
+						// get rid of unnecessary closing tag at the start
+						if (splitResult.tagsToOpen === "" && splitResult.tagsToClose !== ""){
+							text = text.slice(text.indexOf(">"));
+						}
+						if (text.length === splitResult.tagsToClose.length){
+							// only closing tags remaining
+							text = "";
+						} else{
+							//reformat
+							text = splitResult.tagsToOpen + text;	
+						}
 					} else{
 
 						// check if text has at least one word shorter than size to cut
-						
-						while ((firstSpace = text.indexOf(' ')) === 0 ){
-							text = text.slice(1);
-						}
 						if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)) )) {
 						// actual work
 						splitResult = this.splitText(text, size);
 						doneText = splitResult;
 						truncatedLength = doneText.length;
 						text = text.slice(truncatedLength);
-						textArray.push(doneText);
+						
 					} else {
 						text = '';
 
 					}
 				}
+				textArray.push(doneText);
 			}
 		}
 		console.log(textArray);
@@ -218,3 +227,8 @@ angular.module('mentoringServices', [])
 	}
 };
 });
+
+
+
+
+// get rid of text.slice(1)
