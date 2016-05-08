@@ -10,11 +10,11 @@
 */
 angular
 .module('mentoringControllers', ['mentoringServices'])
-.controller('mentorsListController', [ '$scope', '$http', 'textSplit', function($scope, $http, textSplit) {
+.controller('mentorsListController', [ '$scope', '$http', 'textSplitter', function($scope, $http, textSplitter) {
 
     //varaibles
 
-// console.log(textSplit);
+// console.log(textSplitter);
 $http.get('data/mentorsInfo.json').success(function(data) {
     $scope.mentors = data;
     var text
@@ -27,12 +27,12 @@ $http.get('data/mentorsInfo.json').success(function(data) {
     ,   doneText;
 
     angular.forEach($scope.mentors, function(mentor) {
-        mentor.newBio = textSplit.getSplitData(mentor.bio, 10);
+        mentor.newBio = textSplitter.getSplitData(mentor.bio, 10);
         
     });
 
     // angular.forEach($scope.mentors[2].newBio, function(splitted) {
-    //     var planeT = splitted.replace(/(&([^;]+);|\r?\n|\r)|(<([^>]+)>)/ig,"");
+    //     var plainT = splitted.replace(/(&([^;]+);|\r?\n|\r)|(<([^>]+)>)/ig,"");
     //     console.log(splitted.length);
         
     // });
