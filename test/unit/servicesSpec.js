@@ -165,13 +165,20 @@ describe("textSplitter service", function (){
             expect(textSplitterService.fixTextFormatting("12&45; 89<tag>dsf")).toEqual("12 &45; 89 <tag> dsf");
         });
     });
-    describe("smartSlice function that return index of cutting that maintain special formatting", function () {
+    describe("smartSlice function that pushes to array and returns rest of text", function () {
 
-        it("Should keep the special characters 1", function () {
-            expect(textSplitterService.smartSlice("12&45; 89", 8)).toEqual("12&45;89");
+        var array = [];
+
+        it("Should push all of the text to the array and return empty string", function () {
+            debugger;
+            expect(textSplitterService.smartSlice("12&45; 89", 5, 10, array)).toEqual("");
+            expect(array).toEqual(["12&45; 89"])
         });
         it("Should keep the special characters 2", function () {
-            expect(textSplitterService.smartSlice("12&45; 89", 3)).toEqual("12&45;");
+            debugger;
+            array = [];
+            expect(textSplitterService.smartSlice("12&45; 89", 3, 10, array)).toEqual(" 89");
+            expect(array).toEqual(["12&45;"]);
         });
     });
     describe("handleNoTags function that takes no tags text and fills the textArray with splitted text and returns cutted text", function () {
@@ -183,25 +190,25 @@ describe("textSplitter service", function (){
         })
     })
 
-    // describe("sliceFormatted function that return array of strings splitted depending on size", function () {
-    //     it("Should split text without loosing special characters", function () {
-    //         debugger;
-    //         expect(textSplitterService.sliceFormatted("12&45; 89", 3)).toEqual("12 &45;");
-    //     });
-    //     it("Should splitted text without damaging html tags", function () {
-    //         expect(textSplitterService.sliceFormatted("12<b> 89</b>", 3)).toEqual("12");
-    //     });
-    // });
+    describe("sliceFormatted function that return array of strings splitted depending on size", function () {
+        it("Should split text without loosing special characters", function () {
+            debugger;
+            expect(textSplitterService.sliceFormatted("12&45; 89", 3)).toEqual("12 &45;");
+        });
+        it("Should splitted text without damaging html tags", function () {
+            expect(textSplitterService.sliceFormatted("12<b> 89</b>", 3)).toEqual("12");
+        });
+    });
 
     // @TO_DO
-    // describe("getSplitData function that return array of strings splitted depending on size", function () {
-    //     it("Should split text without loosing special characters", function () {
-    //         expect(textSplitterService.getSplitData("12&45; 89"), 3).toEqual(["12 &45;","89"]);
-    //     });
-    //     it("Should splitted text without damaging html tags", function () {
-    //         expect(textSplitterService.getSplitData("12<b> 89</b>"), 3).toEqual(["12","<b> 89 </b>"]);
-    //     });
-    // });
+    describe("getSplitData function that return array of strings splitted depending on size", function () {
+        it("Should split text without loosing special characters", function () {
+            expect(textSplitterService.getSplitData("12&45; 89"), 3).toEqual(["12 &45;","89"]);
+        });
+        it("Should splitted text without damaging html tags", function () {
+            expect(textSplitterService.getSplitData("12<b> 89</b>"), 3).toEqual(["12","<b> 89 </b>"]);
+        });
+    });
 
 });
 

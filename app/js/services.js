@@ -51,92 +51,86 @@
 			return text;
 		},
 		getPlainText: function(text) {
-			var result, length = 0
-			// removing html spaces and trimming
-			,
+			var result, length = 0,
 			regExSpecialChars = /(&([^;]+);|\r?\n|\r)/g,
 			regExspaces = /\s+/g,
 			regExTrim = /^\s+|\s+$/g;
 			if ((typeof text === "string" || text instanceof String) && (text.length > 0)) {
-			//clean text
-			text = text.replace(regExSpecialChars, "");
-			text = text.replace(regExspaces, " ");
-			text = text.replace(regExTrim, "");
-		}
-		result = {
-			text: text,
-			length: text.length
-		};
-		return result;
-	},
-	tagType: function(tag) {
-		if (tag.indexOf("</") === 0) {
-			return "close";
-		} else if (tag.indexOf("/>") === tag.length - 2) {
-			return "unpaired"
-		}
-		return "open";
-	},
-	getClosingTags: function(text, depth) {
-		var match,
-		regExTag = /(<([^>]+)>)/g,
-		internalDepth = 0,
-		requestedTags = "";
+				//clean text
+				text = text.replace(regExSpecialChars, "");
+				text = text.replace(regExspaces, " ");
+				text = text.replace(regExTrim, "");
+			}
+			result =text;
+			return result;
+		},
+		tagType: function(tag) {
+			if (tag.indexOf("</") === 0) {
+				return "close";
+			} else if (tag.indexOf("/>") === tag.length - 2) {
+				return "unpaired"
+			}
+			return "open";
+		},
+		getClosingTags: function(text, depth) {
+			var match,
+			regExTag = /(<([^>]+)>)/g,
+			internalDepth = 0,
+			requestedTags = "";
 
-		while (((match = regExTag.exec(text)) != null) && depth > 0) {
-			if (this.tagType(match[0]) === "open") {
-				internalDepth++;
-			} else {
-				if (internalDepth === 0) {
-					requestedTags += match[0];
-					depth--;
+			while (((match = regExTag.exec(text)) != null) && depth > 0) {
+				if (this.tagType(match[0]) === "open") {
+					internalDepth++;
 				} else {
-					internalDepth--;
+					if (internalDepth === 0) {
+						requestedTags += match[0];
+						depth--;
+					} else {
+						internalDepth--;
+					}
 				}
 			}
-		}
-		return requestedTags;
-	},
-	smartSlice: function(text, size) {
+			return requestedTags;
+		},
+		smartSlice: function(text, size, workBoundry , textArray) {
 			// implement according to tests
 			var regEx = /(&([^;]+);|\r?\n|\r)/ig,
+			plainText,
 			remainingSize = size,
 			plainLength = 0,
-			plainText, match, lastMatchEnd = 0,
+			lastMatchEnd = 0,
 			textInside = "",
-			terminatingplain, result;
+			terminatingplain,plainText,match,result;
 
-			while ((match = regEx.exec(text)) !== null) {
-				console.log(match[0] + "\t" + match.index);
+
+			while (((match = regEx.exec(text)) !== null) && (match.index < workBoundry)) {
 				textInside = text.slice(lastMatchEnd, match.index);
-				plainText = this.getPlainText(textInside).text;
+				plainText = this.getPlainText(textInside);
 				plainLength = plainText.length;
-				console.log(plainLength);
 				if (plainLength < remainingSize) {
 					remainingSize -= plainLength;
 				} else if (plainLength > remainingSize) {
 					terminatingplain = this.charactersTruncate(plainText, remainingSize);
-					result = text.slice(0, lastMatchEnd) + terminatingplain;
-					console.log("text:" + text + ";result:" + result);
-					return result;
+					var textToPush = text.slice(0, lastMatchEnd) + " " + remainingPlain;
+					textArray.push(textToPush);
+					var reaminingLength = remainingPlain.length + (remainingPlain.length > 0 ? 1 : 0);
+					text = text.slice(lastMatchEnd + reaminingLength);
 				} else {
-					result = text.slice(0, match[0].length);
-					console.log("text:" + text + ";result:" + result);
-					return result;
+					textArray.push(text.slice(0, lastMatchEnd));
+					text = text.slice(lastMatchEnd);
 				}
-				// TO_DO
-				// handle remaining with no plaintext
-				// handle returning values treated correctly
 
 				lastMatchEnd += match.index + match[0].length;
 			}
 			// no more matches and still remainingSize so get terminating plane
-			var textPost = this.charactersTruncate(text.slice(lastMatchEnd));
-			remainingSize -= (textPost.indexOf(" ") + 1);
-			terminatingplain = this.charactersTruncate(textPost, remainingSize);
-			result = text.slice(0, lastMatchEnd) + terminatingplain;
-			console.log("res:" + result);
-			return result;
+			var textPost = text.slice(lastMatchEnd, workBoundry);
+			plainText = this.getPlainText(textPost);
+			terminatingplain = this.charactersTruncate(plainText, remainingSize);
+			// pluls one is for the space truncated
+			var pivot = lastMatchEnd + terminatingplain.length + (terminatingplain.length > 0 ? 1 : 0);
+			textArray.push(text.slice(0,pivot));
+			text = text.slice(pivot);
+			return text;
 		},
 		// this is handle middle work
 		sliceFormatted: function(text, size) {
@@ -222,40 +216,6 @@
 			};
 			return text;
 		},
-		handleNoTags: function(text, size, tagBoundry , textArray) {
-			// handle text
-			var match,
-			plainRegEx = /(&([^;]+);|\r?\n|\r)/ig,
-			textNoSpecial,
-			remainingSize = size,
-			plain;
-
-
-			// plainContent = text.replace(plainRegEx,"");
-			debugger;
-
-			do {
-				// get special chars
-				match = plainRegEx.exec(text);
-				if ((match != null) && (match.index < tagBoundry) ) {		
-					// there are special chars inside targeted text
-					// get no special text
-					textNoSpecial = text.slice(0, match.index);
-					// get plain
-					palin = this.getPlainText(textNoSpecial);
-					// compare length
-					if (plain.length < remainingSize){
-						reamining -= palin.length;
-					} else (plain.length === remainingSize)
-
-
-
-
-				}
-			} while ((match != null) && (match.index < tagBoundry) )
-
-			return text;			
-		},
 		handleTextBefore: function(text, size, textArray) {
 
 			var textNoTag
@@ -276,7 +236,7 @@
 			// while its length is greater than size
 			if (plainNoTag.length >= size) {
 				// handle it and fill passed array
-				text = this.handleNoTags(text, size, textNoTag.length, textArray);
+				text = this.smartSlice(text, size, textNoTag.length, textArray);
 			}
 			return text;
 		},
