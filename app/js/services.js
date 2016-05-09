@@ -52,52 +52,52 @@
 		},
 		getPlainText: function(text) {
 			var result, length = 0
-				// removing html spaces and trimming
-				,
-				regExSpecialChars = /(&([^;]+);|\r?\n|\r)/g,
-				regExspaces = /\s+/g,
-				regExTrim = /^\s+|\s+$/g;
-				if ((typeof text === "string" || text instanceof String) && (text.length > 0)) {
-				//clean text
-				text = text.replace(regExSpecialChars, "");
-				text = text.replace(regExspaces, " ");
-				text = text.replace(regExTrim, "");
-			}
-			result = {
-				text: text,
-				length: text.length
-			};
-			return result;
-		},
-		tagType: function(tag) {
-			if (tag.indexOf("</") === 0) {
-				return "close";
-			} else if (tag.indexOf("/>") === tag.length - 2) {
-				return "unpaired"
-			}
-			return "open";
-		},
-		getClosingTags: function(text, depth) {
-			var match,
-			regExTag = /(<([^>]+)>)/g,
-			internalDepth = 0,
-			requestedTags = "";
+			// removing html spaces and trimming
+			,
+			regExSpecialChars = /(&([^;]+);|\r?\n|\r)/g,
+			regExspaces = /\s+/g,
+			regExTrim = /^\s+|\s+$/g;
+			if ((typeof text === "string" || text instanceof String) && (text.length > 0)) {
+			//clean text
+			text = text.replace(regExSpecialChars, "");
+			text = text.replace(regExspaces, " ");
+			text = text.replace(regExTrim, "");
+		}
+		result = {
+			text: text,
+			length: text.length
+		};
+		return result;
+	},
+	tagType: function(tag) {
+		if (tag.indexOf("</") === 0) {
+			return "close";
+		} else if (tag.indexOf("/>") === tag.length - 2) {
+			return "unpaired"
+		}
+		return "open";
+	},
+	getClosingTags: function(text, depth) {
+		var match,
+		regExTag = /(<([^>]+)>)/g,
+		internalDepth = 0,
+		requestedTags = "";
 
-			while (((match = regExTag.exec(text)) != null) && depth > 0) {
-				if (this.tagType(match[0]) === "open") {
-					internalDepth++;
+		while (((match = regExTag.exec(text)) != null) && depth > 0) {
+			if (this.tagType(match[0]) === "open") {
+				internalDepth++;
+			} else {
+				if (internalDepth === 0) {
+					requestedTags += match[0];
+					depth--;
 				} else {
-					if (internalDepth === 0) {
-						requestedTags += match[0];
-						depth--;
-					} else {
-						internalDepth--;
-					}
+					internalDepth--;
 				}
 			}
-			return requestedTags;
-		},
-		smartSlice: function(text, size) {
+		}
+		return requestedTags;
+	},
+	smartSlice: function(text, size) {
 			// implement according to tests
 			var regEx = /(&([^;]+);|\r?\n|\r)/ig,
 			remainingSize = size,
@@ -138,6 +138,7 @@
 			console.log("res:" + result);
 			return result;
 		},
+		// this is handle middle work
 		sliceFormatted: function(text, size) {
 			var match, regExTag = /(<([^>]+)>)/ig,
 			plainRegEx = /(&([^;]+);|\r?\n|\r)|(<([^>]+)>)/ig,
@@ -225,73 +226,34 @@
 			// handle text
 			var match,
 			plainRegEx = /(&([^;]+);|\r?\n|\r)/ig,
-			plainLength = 0,
-			plainText = "",
-			plainPreTag = "",
-			plainPostTag = "",
-			lastTagEnd = 0,
-			terminatingplain = "",
-			terminatingTags = "",
-			openDepth = 0,
-			openTags = [],
-			stillOpenedTags = "",
-			truncatedLength = 0
-			textNoSpecial;
+			textNoSpecial,
+			remainingSize = size,
+			plain;
 
 
 			// plainContent = text.replace(plainRegEx,"");
 			debugger;
 
-			match = plainRegEx.exec(text)
-			if (match != null) {
+			do {
+				// get special chars
+				match = plainRegEx.exec(text);
+				if ((match != null) && (match.index < tagBoundry) ) {		
+					// there are special chars inside targeted text
+					// get no special text
+					textNoSpecial = text.slice(0, match.index);
+					// get plain
+					palin = this.getPlainText(textNoSpecial);
+					// compare length
+					if (plain.length < remainingSize){
+						reamining -= palin.length;
+					} else (plain.length === remainingSize)
 
-				if (match.index < tagBoundry){
 
-				}
-				var textNoSpecial = text.slice(0, match.index);
-				text = this.handleNoSpecial(text, size, textArray);
 
-				// getting plain text between tags, lastTagEnd is zero in first iteration
-				plainText = this.getPlainText(text.slice(lastTagEnd, match.index)).length;
-
-				// reamining size starts seem as entered size
-				if (plainText.length < remainingSize) {
-					remainingSize -= plainText.length;
-				} else if (plainText.length > remainingSize) {
-					terminatingplain = this.charactersTruncate(plainText, remainingSize);
-					remainingSize = 0;
-					if ((terminatingplain === "") && (openDepth > 0) && (this.tagType(match[0]) === "close")) {
-						terminatingTags = this.getClosingTags(text.slice(match.index + match[0].length), openDepth - 1);
-						stillOpenedTags.pop();
-					} else {
-						terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
-					}
-
-					stillOpenedTags = openTags.join("");
-					text = text.slice(0, lastTagEnd) + terminatingplain;
-				} else if (plainText.length === remainingSize) {
-					terminatingTags = this.getClosingTags(text.slice(match.index), openDepth);
-					if ((openDepth > 0) && (this.tagType(match[0]) === "close")) {
-						openTags.pop();
-					}
-					stillOpenedTags = openTags.join("");
-					text = text.slice(0, lastTagEnd) + plainText;
-				}
-				lastTagEnd = match.index + match[0].length;
-			}
-			if (remainingSize > 0) {
-				if ((plainPostTag = text.slice(lastTagEnd)) !== "") {
-					// silice(...,size+50) is for optimization
-					plainPostTag = this.getPlainText(text.slice(lastTagEnd, remainingSize + 50), remainingSize).text;
-					remainingSize -= plainPostTag.length;
 
 				}
-			}
-			var obj = {
-				text: text,
-				tagsToOpen: stillOpenedTags,
-				tagsToClose: terminatingTags
-			};
+			} while ((match != null) && (match.index < tagBoundry) )
+
 			return text;			
 		},
 		handleTextBefore: function(text, size, textArray) {
