@@ -68,15 +68,15 @@ describe("textSplitter service", function (){
             plainSplitted = textSplitterService.charactersTruncate("", 40);
             expect(plainSplitted).toEqual("");
         });
-        // ignore starting spaces
-        it("Should ignore the starting spaces", function () {
-            plainSplitted = textSplitterService.charactersTruncate("   12345", 5);
-            expect(plainSplitted).toEqual("12345");
-        });
+        // // ignore starting spaces REMOVED
+        // it("Should ignore the starting spaces", function () {
+        //     plainSplitted = textSplitterService.charactersTruncate("   12345", 5);
+        //     expect(plainSplitted).toEqual("12345");
+
+        // });
         // no cutted words        
         it("Should not split single word", function () {
             plainSplitted = textSplitterService.charactersTruncate("good experience", 13);
-            console.log("plainSplitted:"+plainSplitted);
             expect(plainSplitted).toEqual("good");
         });
         it("Should do nothing to this string", function () {
@@ -91,8 +91,8 @@ describe("textSplitter service", function (){
             expect(textSplitterService.charactersTruncate("1234567890", 30)).toEqual("1234567890");
         });
 
-        it("Should trim this down including the space", function () {
-            expect(textSplitterService.charactersTruncate("123456789 10 11 12 13 14", 13)).toEqual("123456789 10");
+        it("Should trim this downm leaving the space", function () {
+            expect(textSplitterService.charactersTruncate("123456789 10 11 12 13 14", 13)).toEqual("123456789 10 ");
         });
 
         it("Should handle invalid chars numbers type", function () {
@@ -102,24 +102,24 @@ describe("textSplitter service", function (){
 
     describe("getPlainText function in textSplitter service", function () {
 
-        it("Should return 0 1st", function () {
+        it("Should return no text", function () {
             expect(textSplitterService.getPlainText("").length).toEqual(0);
         });
-        it("Should return 0 2ed", function () {
-            expect(textSplitterService.getPlainText("     ").length).toEqual(0);
+        it("Should make all empty space only one space", function () {
+            expect(textSplitterService.getPlainText("     ")).toEqual(" ");
         });
-        it("Should return 0 3rd", function () {
-            expect(textSplitterService.getPlainText("   &npsb; \n\n\n   \r  \r  ").length).toEqual(0);
+        it("Should return only one space mathcing one specail character and space after and before equals one space each", function () {
+            expect(textSplitterService.getPlainText("   &npsb; \n\n\n   \r  \r  ")).toEqual("   ");
         });
-        it("Should return 0 4th", function () {
-            expect(textSplitterService.getPlainText("   12   &npsb; \n\n\n   \r  \r  ").length).toEqual(2);
+        it("Should replace one special character by one space while maintaining one more space in between and making starting spaces one space", function () {
+            expect(textSplitterService.getPlainText("   12   &npsb; \n\n\n   \r  \r  ")).toEqual(" 12   ");
         });
-        it("Should return 0 5th", function () {
-            expect(textSplitterService.getPlainText("12   &npsb; \n\n\n   \r  \r  ").length).toEqual(2);
+        it("Should replace one character by one space while maintaining one more space in between no starting spaces", function () {
+            expect(textSplitterService.getPlainText("12   &npsb; \n\n\n   \r  \r  ")).toEqual("12   ");
         });
         // spaces in between
-        it("Should return 0 sth", function () {
-            expect(textSplitterService.getPlainText("   12 45 &npsb; \n\n\n   \r  \r ab ").length).toEqual("12 45 ab".length);
+        it("Should replace one specail character with space and keep separating spaces", function () {
+            expect(textSplitterService.getPlainText("   12 45 &npsb; \n\n\n   \r  \r ab ")).toEqual(" 12 45   ab ");
         });
     });
     describe("tagType function in textSplitter service", function () {
@@ -170,45 +170,61 @@ describe("textSplitter service", function (){
         var array = [];
 
         it("Should push all of the text to the array and return empty string", function () {
-            debugger;
-            expect(textSplitterService.smartSlice("12&45; 89", 5, 10, array)).toEqual("");
-            expect(array).toEqual(["12&45; 89"])
+            expect(textSplitterService.smartSlice("12 &45; 89", 5, 10, array)).toEqual(" 89");
+            expect(array).toEqual(["12 &45;"])
         });
         it("Should keep the special characters 2", function () {
-            debugger;
             array = [];
-            expect(textSplitterService.smartSlice("12&45; 89", 3, 10, array)).toEqual(" 89");
-            expect(array).toEqual(["12&45;"]);
+            expect(textSplitterService.smartSlice("12 &45; 89", 3, 10, array)).toEqual(" 89");
+            expect(array).toEqual(["12 &45;"]);
         });
     });
-    describe("handleNoTags function that takes no tags text and fills the textArray with splitted text and returns cutted text", function () {
+    describe("handleTextBefore function that takes text and handles the part before tag filling the textArray with splitted text and returns remaining text from original text", function () {
         it("should return this as is", function () {
+            
             var array = [];
-            expect(textSplitterService.handleNoTags("12 &56; 9", 2,10, array)).toEqual(" 9");
-            expect(textSplitterService.handleNoTags("12 &56; 9",3, 10, array)).toEqual("");
-            expect(textSplitterService.handleNoTags("12 &56; 9",1, 10, array)).toEqual("");
-        })
+            expect(textSplitterService.handleTextBefore("12 &56; 9", 2, array)).toEqual("");
+            expect(array).toEqual(["12 &56;", " 9"]);
+            
+            array = [];
+            // it doesn't throw the " 9" away because its length is smaller than size and should be handeled later
+            expect(textSplitterService.handleTextBefore("12 &56; 9",3,  array)).toEqual(" 9");
+            expect(array).toEqual(["12 &56;"]);
+            array = [];
+            expect(textSplitterService.handleTextBefore("12 &56; 9",1,  array)).toEqual("12 &56; 9");
+            expect(array).toEqual([]);
+            array = [];
+        });
+         it("should return this as is", function () {
+            debugger;
+            var array = [];
+            expect(textSplitterService.handleTextBefore("1234 6789 12 4567 <tage> 12345 7891 34567 </tag>", 10, array)).toEqual("12 4567 <tage> 12345 7891 34567 </tag>");
+            expect(array).toEqual(["1234 6789 "]);
+            
+            array = [];
+        });
+
     })
 
-    describe("sliceFormatted function that return array of strings splitted depending on size", function () {
-        it("Should split text without loosing special characters", function () {
-            debugger;
-            expect(textSplitterService.sliceFormatted("12&45; 89", 3)).toEqual("12 &45;");
-        });
-        it("Should splitted text without damaging html tags", function () {
-            expect(textSplitterService.sliceFormatted("12<b> 89</b>", 3)).toEqual("12");
-        });
-    });
+    // describe("sliceFormatted function that return array of strings splitted depending on size", function () {
 
-    // @TO_DO
-    describe("getSplitData function that return array of strings splitted depending on size", function () {
-        it("Should split text without loosing special characters", function () {
-            expect(textSplitterService.getSplitData("12&45; 89"), 3).toEqual(["12 &45;","89"]);
-        });
-        it("Should splitted text without damaging html tags", function () {
-            expect(textSplitterService.getSplitData("12<b> 89</b>"), 3).toEqual(["12","<b> 89 </b>"]);
-        });
-    });
+    //     it("Should split text without loosing special characters", function () {
+    //         expect(textSplitterService.sliceFormatted("12&45; 89", 3)).toEqual("12 &45;");
+    //     });
+    //     it("Should splitted text without damaging html tags", function () {
+    //         expect(textSplitterService.sliceFormatted("12<b> 89</b>", 3)).toEqual("12");
+    //     });
+    // });
+
+    // // @TO_DO
+    // describe("getSplitData function that return array of strings splitted depending on size", function () {
+    //     it("Should split text without loosing special characters", function () {
+    //         expect(textSplitterService.getSplitData("12&45; 89"), 3).toEqual(["12 &45;","89"]);
+    //     });
+    //     it("Should splitted text without damaging html tags", function () {
+    //         expect(textSplitterService.getSplitData("12<b> 89</b>"), 3).toEqual(["12","<b> 89 </b>"]);
+    //     });
+    // });
 
 });
 
