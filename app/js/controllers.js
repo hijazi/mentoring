@@ -27,7 +27,7 @@ $http.get('data/mentorsInfo.json').success(function(data) {
     ,   doneText;
 
     angular.forEach($scope.mentors, function(mentor) {
-        mentor.newBio = textSplitter.getSplitData(mentor.bio, 10);
+        mentor.newBio = textSplitter.getSplitData(mentor.bio, 100);
         
     });
 

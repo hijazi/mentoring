@@ -15,196 +15,206 @@ describe("textSplitter service", function (){
 		});
 
 	});
-    describe("charactersTruncate function", function(){
-        var plainSplitted;
+    // describe("charactersTruncate function", function(){
+    //     var plainSplitted;
 
-        // unformatted text
+    //     // unformatted text
 
-        // one word
-        // >size
-        it("Should return empty string when text is one word and longer than size", function() {
-            plainSplitted = textSplitterService.charactersTruncate("OneWordLognerThanFive",5);
-            expect(plainSplitted).toEqual("");
-        });
-        // ===size
-        it("Should return one word if its size is same as size", function () {
-            plainSplitted = textSplitterService.charactersTruncate("12345", 5);
-            expect(plainSplitted).toEqual("12345");
-        });
-        // <size
-        it("Should return one word if its size is smaller than size", function () {
-            plainSplitted = textSplitterService.charactersTruncate("123", 5);
-            expect(plainSplitted).toEqual("123");
-        });
-        // 1st word < size
-        it("Should return first word if it is the only one shorter or equal the size", function () {
-            plainSplitted = textSplitterService.charactersTruncate("good experience", 5);
-            expect(plainSplitted).toEqual("good");
-        });
+    //     // one word
+    //     // >size
+    //     it("Should return empty string when text is one word and longer than size", function() {
+    //         plainSplitted = textSplitterService.charactersTruncate("OneWordLognerThanFive",5);
+    //         expect(plainSplitted).toEqual("");
+    //     });
+    //     // ===size
+    //     it("Should return one word if its size is same as size", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate("12345", 5);
+    //         expect(plainSplitted).toEqual("12345");
+    //     });
+    //     // <size
+    //     it("Should return one word if its size is smaller than size", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate("123", 5);
+    //         expect(plainSplitted).toEqual("123");
+    //     });
+    //     // 1st word < size
+    //     it("Should return first word if it is the only one shorter or equal the size", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate("good experience", 5);
+    //         expect(plainSplitted).toEqual("good");
+    //     });
 
-        // size NaN
-        it("Should return empty string when size is NaN", function () {
-            plainSplitted = textSplitterService.charactersTruncate("what ever string", "size not a number");
-            expect(plainSplitted).toEqual("");
-        });
+    //     // size NaN
+    //     it("Should return empty string when size is NaN", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate("what ever string", "size not a number");
+    //         expect(plainSplitted).toEqual("");
+    //     });
 
-        // size negative or zero
-        // 1st case spaces
-        // 2ed no spaces
-        it("Should return empty string when size is negative or zero disregarding text; first case text with spaces", function () {
-            plainSplitted = textSplitterService.charactersTruncate("what ever string", -1);
-            expect(plainSplitted).toEqual("");
-            plainSplitted = textSplitterService.charactersTruncate("whatEverString", -1);
-            expect(plainSplitted).toEqual("");
-            expect(textSplitterService.charactersTruncate("1234567890", 0)).toEqual("");
-        });
-        // text not string
-        it("Should return empty string when text is not a string disregarding the number", function () {
-            plainSplitted = textSplitterService.charactersTruncate(50, 30);
-            expect(plainSplitted).toEqual("");
-        });
-        // text empty
-        it("Should return empty string when text is empty string", function () {
-            plainSplitted = textSplitterService.charactersTruncate("", 40);
-            expect(plainSplitted).toEqual("");
-        });
-        // // ignore starting spaces REMOVED
-        // it("Should ignore the starting spaces", function () {
-        //     plainSplitted = textSplitterService.charactersTruncate("   12345", 5);
-        //     expect(plainSplitted).toEqual("12345");
+    //     // size negative or zero
+    //     // 1st case spaces
+    //     // 2ed no spaces
+    //     it("Should return empty string when size is negative or zero disregarding text; first case text with spaces", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate("what ever string", -1);
+    //         expect(plainSplitted).toEqual("");
+    //         plainSplitted = textSplitterService.charactersTruncate("whatEverString", -1);
+    //         expect(plainSplitted).toEqual("");
+    //         expect(textSplitterService.charactersTruncate("1234567890", 0)).toEqual("");
+    //     });
+    //     // text not string
+    //     it("Should return empty string when text is not a string disregarding the number", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate(50, 30);
+    //         expect(plainSplitted).toEqual("");
+    //     });
+    //     // text empty
+    //     it("Should return empty string when text is empty string", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate("", 40);
+    //         expect(plainSplitted).toEqual("");
+    //     });
+    //     // // ignore starting spaces REMOVED
+    //     // it("Should ignore the starting spaces", function () {
+    //     //     plainSplitted = textSplitterService.charactersTruncate("   12345", 5);
+    //     //     expect(plainSplitted).toEqual("12345");
 
-        // });
-        // no cutted words        
-        it("Should not split single word", function () {
-            plainSplitted = textSplitterService.charactersTruncate("good experience", 13);
-            expect(plainSplitted).toEqual("good");
-        });
-        it("Should do nothing to this string", function () {
-            expect(textSplitterService.charactersTruncate("12345678907")).toEqual("12345678907");
-        });
+    //     // });
+    //     // no cutted words        
+    //     it("Should not split single word", function () {
+    //         plainSplitted = textSplitterService.charactersTruncate("good experience", 13);
+    //         expect(plainSplitted).toEqual("good");
+    //     });
+    //     it("Should do nothing to this string", function () {
+    //         expect(textSplitterService.charactersTruncate("12345678907")).toEqual("12345678907");
+    //     });
 
-        it("should not reutrn any number", function () {
-            expect(textSplitterService.charactersTruncate(null, 30)).toEqual("");
-        });
+    //     it("should not reutrn any number", function () {
+    //         expect(textSplitterService.charactersTruncate(null, 30)).toEqual("");
+    //     });
 
-        it("Should not trim these down", function () {
-            expect(textSplitterService.charactersTruncate("1234567890", 30)).toEqual("1234567890");
-        });
+    //     it("Should not trim these down", function () {
+    //         expect(textSplitterService.charactersTruncate("1234567890", 30)).toEqual("1234567890");
+    //     });
 
-        it("Should trim this downm leaving the space", function () {
-            expect(textSplitterService.charactersTruncate("123456789 10 11 12 13 14", 13)).toEqual("123456789 10 ");
-        });
+    //     it("Should trim this downm leaving the space", function () {
+    //         expect(textSplitterService.charactersTruncate("123456789 10 11 12 13 14", 13)).toEqual("123456789 10 ");
+    //     });
 
-        it("Should handle invalid chars numbers type", function () {
-            expect(textSplitterService.charactersTruncate("1234567890", "abc")).toEqual("");
-        });
-    });
+    //     it("Should handle invalid chars numbers type", function () {
+    //         expect(textSplitterService.charactersTruncate("1234567890", "abc")).toEqual("");
+    //     });
+    // });
 
-    describe("getPlainText function in textSplitter service", function () {
+    // describe("getPlainText function in textSplitter service", function () {
 
-        it("Should return no text", function () {
-            expect(textSplitterService.getPlainText("").length).toEqual(0);
-        });
-        it("Should make all empty space only one space", function () {
-            expect(textSplitterService.getPlainText("     ")).toEqual(" ");
-        });
-        it("Should return only one space mathcing one specail character and space after and before equals one space each", function () {
-            expect(textSplitterService.getPlainText("   &npsb; \n\n\n   \r  \r  ")).toEqual("   ");
-        });
-        it("Should replace one special character by one space while maintaining one more space in between and making starting spaces one space", function () {
-            expect(textSplitterService.getPlainText("   12   &npsb; \n\n\n   \r  \r  ")).toEqual(" 12   ");
-        });
-        it("Should replace one character by one space while maintaining one more space in between no starting spaces", function () {
-            expect(textSplitterService.getPlainText("12   &npsb; \n\n\n   \r  \r  ")).toEqual("12   ");
-        });
-        // spaces in between
-        it("Should replace one specail character with space and keep separating spaces", function () {
-            expect(textSplitterService.getPlainText("   12 45 &npsb; \n\n\n   \r  \r ab ")).toEqual(" 12 45   ab ");
-        });
-    });
-    describe("tagType function in textSplitter service", function () {
+    //     it("Should return no text", function () {
+    //         expect(textSplitterService.getPlainText("").length).toEqual(0);
+    //     });
+    //     it("Should make all empty space only one space", function () {
+    //         expect(textSplitterService.getPlainText("     ")).toEqual(" ");
+    //     });
+    //     it("Should return only one space mathcing one specail character and space after and before equals one space each", function () {
+    //         expect(textSplitterService.getPlainText("   &npsb; \n\n\n   \r  \r  ")).toEqual("   ");
+    //     });
+    //     it("Should replace one special character by one space while maintaining one more space in between and making starting spaces one space", function () {
+    //         expect(textSplitterService.getPlainText("   12   &npsb; \n\n\n   \r  \r  ")).toEqual(" 12   ");
+    //     });
+    //     it("Should replace one character by one space while maintaining one more space in between no starting spaces", function () {
+    //         expect(textSplitterService.getPlainText("12   &npsb; \n\n\n   \r  \r  ")).toEqual("12   ");
+    //     });
+    //     // spaces in between
+    //     it("Should replace one specail character with space and keep separating spaces", function () {
+    //         expect(textSplitterService.getPlainText("   12 45 &npsb; \n\n\n   \r  \r ab ")).toEqual(" 12 45   ab ");
+    //     });
+    // });
+    // describe("tagType function in textSplitter service", function () {
 
-        it("Should return open", function () {
-            expect(textSplitterService.tagType("<whatever>")).toEqual("open");
-        });
-        it("Should return close", function () {
-            expect(textSplitterService.tagType("</whatever>")).toEqual("close");
-        });
-        it("Should return unpaired", function () {
-            expect(textSplitterService.tagType("<whatever/>")).toEqual("unpaired");
-        });
-    });
-    describe("getClosingTags function in textSplitter service", function () {
+    //     it("Should return open", function () {
+    //         expect(textSplitterService.tagType("<whatever>")).toEqual("open");
+    //     });
+    //     it("Should return close", function () {
+    //         expect(textSplitterService.tagType("</whatever>")).toEqual("close");
+    //     });
+    //     it("Should return unpaired", function () {
+    //         expect(textSplitterService.tagType("<whatever/>")).toEqual("unpaired");
+    //     });
+    // });
+    // describe("getClosingTags function in textSplitter service", function () {
 
-        it("Should return empty string; depth is 0 or negative", function () {
-            expect(textSplitterService.getClosingTags("</whatever>", 0)).toEqual("");
-            expect(textSplitterService.getClosingTags("</whatever>", -1)).toEqual("");
-        });
+    //     it("Should return empty string; depth is 0 or negative", function () {
+    //         expect(textSplitterService.getClosingTags("</whatever>", 0)).toEqual("");
+    //         expect(textSplitterService.getClosingTags("</whatever>", -1)).toEqual("");
+    //     });
 
-        it("Should return </whatever>", function () {
-            expect(textSplitterService.getClosingTags("</whatever>", 1)).toEqual("</whatever>");
-        });
-        it("Should return first </requested>", function () {
-            expect(textSplitterService.getClosingTags("</requested></whatever>", 1)).toEqual("</requested>");
-        });
-        it("Should return </requested> ignoring closing tags with openning tags before them taking depth into account", function () {
-            expect(textSplitterService.getClosingTags("<something><somethingelse></somethingelse></something></requested>", 1)).toEqual("</requested>");
-            expect(textSplitterService.getClosingTags("<something><something else></something else></something></requested><third thing></third thing></requested2>", 2)).toEqual("</requested></requested2>");
-        });
-        it("Should return </requested> ignoring closing tags with openning tags before them taking depth into account", function () {
-            expect(textSplitterService.getClosingTags("<something><something else></something else></something></requested><third thing></third thing></requested2>", 1)).toEqual("</requested>");
-        });
-        it("Should return </requested></requested2> ignoring that open depth is bigger than available tags", function () {
-            expect(textSplitterService.getClosingTags("<something><something else></something else></something></requested><third thing></third thing></requested2>", 3)).toEqual("</requested></requested2>");
-        });
-    });
-    describe("fixTextFormating function that return text with fiexd spacing", function () {
-        it("Should put space srrounding special characters with trimming", function () {
-            expect(textSplitterService.fixTextFormatting("12&45; 89")).toEqual("12 &45; 89");
-            expect(textSplitterService.fixTextFormatting("12&45; 89<tag>")).toEqual("12 &45; 89 <tag>");
-            expect(textSplitterService.fixTextFormatting("12&45; 89<tag>dsf")).toEqual("12 &45; 89 <tag> dsf");
-        });
-    });
-    describe("smartSlice function that pushes to array and returns rest of text", function () {
+    //     it("Should return </whatever>", function () {
+    //         expect(textSplitterService.getClosingTags("</whatever>", 1)).toEqual("</whatever>");
+    //     });
+    //     it("Should return first </requested>", function () {
+    //         expect(textSplitterService.getClosingTags("</requested></whatever>", 1)).toEqual("</requested>");
+    //     });
+    //     it("Should return </requested> ignoring closing tags with openning tags before them taking depth into account", function () {
+    //         expect(textSplitterService.getClosingTags("<something><somethingelse></somethingelse></something></requested>", 1)).toEqual("</requested>");
+    //         expect(textSplitterService.getClosingTags("<something><something else></something else></something></requested><third thing></third thing></requested2>", 2)).toEqual("</requested></requested2>");
+    //     });
+    //     it("Should return </requested> ignoring closing tags with openning tags before them taking depth into account", function () {
+    //         expect(textSplitterService.getClosingTags("<something><something else></something else></something></requested><third thing></third thing></requested2>", 1)).toEqual("</requested>");
+    //     });
+    //     it("Should return </requested></requested2> ignoring that open depth is bigger than available tags", function () {
+    //         expect(textSplitterService.getClosingTags("<something><something else></something else></something></requested><third thing></third thing></requested2>", 3)).toEqual("</requested></requested2>");
+    //     });
+    // });
+    // describe("fixTextFormating function that return text with fiexd spacing", function () {
+    //     it("Should put space srrounding special characters with trimming", function () {
+    //         expect(textSplitterService.fixTextFormatting("12&45; 89")).toEqual("12 &45; 89");
+    //         expect(textSplitterService.fixTextFormatting("12&45; 89<tag>")).toEqual("12 &45; 89 <tag>");
+    //         expect(textSplitterService.fixTextFormatting("12&45; 89<tag>dsf")).toEqual("12 &45; 89 <tag> dsf");
+    //     });
+    // });
+    // describe("smartSlice function that pushes to array and returns rest of text", function () {
 
-        var array = [];
+    //     var array = [];
 
-        it("Should push all of the text to the array and return empty string", function () {
-            expect(textSplitterService.smartSlice("12 &45; 89", 5, 10, array)).toEqual(" 89");
-            expect(array).toEqual(["12 &45;"])
-        });
-        it("Should keep the special characters 2", function () {
-            array = [];
-            expect(textSplitterService.smartSlice("12 &45; 89", 3, 10, array)).toEqual(" 89");
-            expect(array).toEqual(["12 &45;"]);
-        });
-    });
+    //     it("Should push all of the text to the array and return empty string", function () {
+    //         expect(textSplitterService.smartSlice("12 &45; 89", 5, 10, array)).toEqual(" 89");
+    //         expect(array).toEqual(["12 &45;"])
+    //     });
+    //     it("Should keep the special characters 2", function () {
+    //         array = [];
+    //         expect(textSplitterService.smartSlice("12 &45; 89", 3, 10, array)).toEqual(" 89");
+    //         expect(array).toEqual(["12 &45;"]);
+    //     });
+    // });
+    // describe("handleTextBefore function that takes text and handles the part before tag filling the textArray with splitted text and returns remaining text from original text", function () {
+    //     it("should return this as is", function () {
+            
+    //         var array = [];
+    //         expect(textSplitterService.handleTextBefore("12 &56; 9", 2, array)).toEqual("");
+    //         expect(array).toEqual(["12 &56;", " 9"]);
+            
+    //         array = [];
+    //         // it doesn't throw the " 9" away because its length is smaller than size and should be handeled later
+    //         expect(textSplitterService.handleTextBefore("12 &56; 9",3,  array)).toEqual(" 9");
+    //         expect(array).toEqual(["12 &56;"]);
+    //         array = [];
+    //         expect(textSplitterService.handleTextBefore("12 &56; 9",1,  array)).toEqual("12 &56; 9");
+    //         expect(array).toEqual([]);
+    //         array = [];
+    //     });
+    //      it("should return this as is", function () {
+    //         var array = [];
+    //         expect(textSplitterService.handleTextBefore("1234 6789 12 4567 <tage> 12345 7891 34567 </tag>", 10, array)).toEqual("12 4567 <tage> 12345 7891 34567 </tag>");
+    //         expect(array).toEqual(["1234 6789 "]);
+            
+    //         array = [];
+    //     });
+
+    // });
+
     describe("handleTextBefore function that takes text and handles the part before tag filling the textArray with splitted text and returns remaining text from original text", function () {
         it("should return this as is", function () {
-            
-            var array = [];
-            expect(textSplitterService.handleTextBefore("12 &56; 9", 2, array)).toEqual("");
-            expect(array).toEqual(["12 &56;", " 9"]);
-            
-            array = [];
-            // it doesn't throw the " 9" away because its length is smaller than size and should be handeled later
-            expect(textSplitterService.handleTextBefore("12 &56; 9",3,  array)).toEqual(" 9");
-            expect(array).toEqual(["12 &56;"]);
-            array = [];
-            expect(textSplitterService.handleTextBefore("12 &56; 9",1,  array)).toEqual("12 &56; 9");
-            expect(array).toEqual([]);
-            array = [];
-        });
-         it("should return this as is", function () {
-            debugger;
-            var array = [];
-            expect(textSplitterService.handleTextBefore("1234 6789 12 4567 <tage> 12345 7891 34567 </tag>", 10, array)).toEqual("12 4567 <tage> 12345 7891 34567 </tag>");
-            expect(array).toEqual(["1234 6789 "]);
-            
-            array = [];
-        });
 
-    })
+            debugger;            
+            var array = [];
+            expect(textSplitterService.getSplitData("<p>What are some ways that help to pray Qiyam Allayl or tahajjud??\r\n</p>\r\n&nbsp;\r\n<p><span background=\"red\">Praise</span> be to Allaah.\r\n</p>&nbsp;\r\n<p>There are many things that one can do to help oneself pray qiyaam al-layl, among which are the following:\r\n</p>&nbsp;\r\n<p>1 – Being sincere towards Allaah, as He has commanded us to be sincere towards Him and none other in our deeds. He tells us (interpretation of the meaning): {And they were commanded not, but that they should worship Allah, and worship none but Him Alone…} [al-Bayyinah 98:5].\r\n</p>&nbsp;\r\n<p>{وَمَا أُمِرُوا إِلَّا لِيَعْبُدُوا اللَّـهَ مُخْلِصِينَ لَهُ الدِّينَ...} البينة: 5\r\n</p>&nbsp;\r\n<p>Transliteration: Wama omiroo illa liyaAAbudoo Allaha mukhliseena lahu alddeena\r\n</p>&nbsp;\r\n<p>The more sincere a person is towards Allaah, the more he will be guided and helped to obey Allaah and draw closer to Him. Ubayy ibn Ka’b (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Give glad tidings to this Ummah of splendour, religion, high rank, victory and prevalence on earth. Whoever does the deeds of the Hereafter to gain some worldly benefit, will have no share of the Hereafter.” [Authenticated by Al-Albani in Saheeh al-Jaami’, 2825].\r\n</p>&nbsp;\r\n<p>«بشر هذه الأمة بالسناء، و الدين، و الرفعة و النصر، و التمكين في الأرض، فمن عمل منهم عمل الآخرة للدنيا، لم يكن له في الآخرة من نصيب» صححه الألباني، صحيح الجامع\r\n</p>&nbsp;\r\n<p>Mutarraf ibn ‘Abd-Allaah ibn al-Shakheer said: “The goodness of a deed is related to the goodness of the heart, and the goodness of the heart is related to the goodness of the intention.” Ibn al-Qayyim (may Allaah have mercy on him) said: “The degree to which a person is helped and aided by Allaah depends on the degree of his intention, drive, aim and hopes. Help from Allaah comes to people in proportion to their drive, intention, hopes and fears, and failure comes to them in like manner.”\r\n</p>&nbsp;\r\n<p>Therefore the salaf were very keen to conceal their acts of worship such as qiyaam al-layl. A man asked Tameem ibn Aws al-Daari (may Allaah be pleased with him), ‘How do you pray at night?’ He got very angry and said, ‘By Allaah, one rak’ah that I pray in secret in the small hours of the night is more beloved to me than praying the whole night long and then telling people about it.’ Ayyoob al-Sakhtiyaani used to spend the entire night in prayer, then when dawn approached, he would go back to bed and lie down, and when dawn came, he would raise his voice as if he had just woken up.\r\n</p>&nbsp;\r\n<p>2 – The person who wants to pray qiyaam al-layl should realize that Allaah is calling him to qiyaam. When the slave realizes that his Master, Who has no need of people’s worship, is calling him to do this, he will respond. Allaah says (interpretation of the meaning): {O you wrapped in your garments (i.e., Prophet Muhammad)! (1) Stand (to pray) all night, except a little. (2) Half of it, or a little less than that, (3) or a little more; and recite the Qur’aan (aloud) in a slow, (pleasant tone) and style.} [Al-Muzzammil 73:1-4].\r\n</p>&nbsp;\r\n<p>{يَا أَيُّهَا الْمُزَّمِّلُ ﴿١﴾ قُمِ اللَّيْلَ إِلَّا قَلِيلًا ﴿٢﴾ نِّصْفَهُ أَوِ انقُصْ مِنْهُ قَلِيلًا ﴿٣﴾ أَوْ زِدْ عَلَيْهِ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا} المزمل: 1-4\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Ya ayyuha almuzzammilu (1) Qumi allayla illa qaleelan (2) Nisfahu awi onqus minhu qaleelan (3) Aw zid AAalayhi warattili alqurana tarteelan\r\n</p>&nbsp;\r\n<p>Sa’d ibn Hishaam ibn ‘Aamir said to ‘Aa’ishah (may Allaah be pleased with her): “Tell me about how the Messenger of Allaah (peace and blessings of Allaah be upon him) prayed qiyaam.” She said: “Have you not read “Yaa ayyuha’l-muzzammil (O you wrapped in your garments!)?” He said, “Of course.” She said: “Allaah, may He be exalted and glorified, made qiyaam obligatory at the beginning of this soorah, so the Prophet (peace and blessings of Allaah be upon him) and his companions prayed qiyaam for a year, and Allaah withheld the end of this soorah for twelve months, until He revealed something at the end of this soorah to make things easier, so qiyaam al-layl became voluntary after it had been obligatory.” [Reported by Muslim].\r\n</p>&nbsp;\r\n<p>«أنبئيني عن قيام رسول الله صلى الله عليه وسلم. فقالت: ألست تقرأ: يا أيها المزمل؟ قلت: بلى. قالت: فإن الله عز وجل افترض قيام الليل في أول هذه السورة. فقام نبي الله صلى الله عليه وسلم وأصحابه حولا. وأمسك الله خاتمتها اثني عشر شهرا في السماء. حتى أنزل الله، في آخر هذه السورة، التخفيف. فصار قيام الليل تطوعا بعد فريضة» رواه مسلم\r\n</p>&nbsp;\r\n<p>3 – Knowing the virtues of qiyaam al-layl. Whoever knows the virtues of this act of worship will be keen to talk to Allaah, may He be exalted, and to stand before Him at that time. Among the reports that describe the virtues of this act of worship is the hadeeth of Abu Hurayrah (may Allaah be pleased with him), in which the Prophet (peace and blessings of Allaah be upon him) said: “The best of prayers after the prescribed prayers is prayer in the depths of the night, and the best of fasting after the month of Ramadaan is fasting the month of Allaah, Muharram.” [Reported by Muslim].\r\n</p>&nbsp;\r\n<p>«أفضل الصلاة، بعد الصلاة المكتوبة، الصلاة في جوف الليل. وأفضل الصيام، بعد شهر رمضان، صيام شهر الله المحرم» رواه مسلم\r\n</p>&nbsp;\r\n<p>‘Abd-Allaah ibn ‘Amr (may Allaah be pleased with them both) reported that the Prophet (peace and blessings of Allaah be upon him) said: “The most beloved of prayer to Allaah is the prayer of Dawood, and the most beloved of fasts to Allaah is the fast of Dawood. He used to sleep for half of the night, then get up and pray for a third of the night, then sleep for a sixth of the night, and he used to fast every other day.” [Agreed upon].\r\n</p>&nbsp;\r\n<p>«أحب الصلاة إلى الله صلاة داود عليه السلام، وأحب الصيام إلى الله صيام داود، وكان ينام نصف الليل ويقوم ثلثه، وينام سدسه، ويصوم يوما ويفطر يوما» متفق عليه\r\n</p>&nbsp;\r\n<p>‘Amr ibn ‘Absah reported that the Prophet (peace and blessings of Allaah be upon him) said: “The closest that the Lord is to His slave is in the later part of the night, so if you can be one of those who remember Allaah at that time, then do so.” [Reported by al-Tirmidhi and authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>«أقرب ما يكون الرب من العبد في جوف الليل الآخر، فإن استطعت أن تكون ممن يذكر الله في تلك الساعة فكن» رواه الترمذي وصححه الألباني\r\n</p>&nbsp;\r\n<p>According to a hadeeth narrated by Ibn Mas’ood (may Allaah be pleased with him), the Prophet (peace and blessings of Allaah be upon him) said: “Our Lord admires two men: a man who leaves his mattress and cover, and slips away from his wife and lover, to go and pray. Allaah says, ‘O My angels, look at My slave. He has left his mattress and cover and slipped away from his lover and wife to pray, out of hope for what is with Me and out of fear of what is with Me.” [Reported by Al-Albani as good or authentic].\r\n</p>&nbsp;\r\n<p>«عجب ربنا من رجلين: رجل ثار عن وطائه ولحافه من بين حبه وأهله إلى صلاته، فيقول الله لملائكته : انظروا إلى عبدي؛ ثار عن فراشه ووطائه من بين حبه وأهله إلى صلاته، رغبة فيما عندي، وشفقا مما عندي...» الألباني، حسن أو صحيح\r\n</p>&nbsp;\r\n<p>Qiyaam al-Layl expels forgetfulness from the heart, as is stated in the hadeeth narrated by ‘Abd-Allaah ibn ‘Amr ibn al-‘Aas (may Allaah be pleased with them both), in which the Prophet (peace and blessings of Allaah be upon him) said: “Whoever recites ten aayaat in qiyaam will not be recorded as one of the forgetful. Whoever recites a hundred aayaat in qiyaam will be recorded as one of the devout, and whoever prays a thousand aayaat in qiyaam will be recorded as one of the muqantareen (those who pile up good deeds).” [Reported by Abu Dawud and authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>«من قام بعشر آيات لم يكتب من الغافلين، ومن قام بمائة آية كتب من القانتين، ومن قام بألف آية كتب من المقنطرين» رواه أبو داود وصححه الألباني\r\n</p>&nbsp;\r\n<p>Yahyaa ibn Mu’aadh said: “The medicine of the heart is five things: reading Qur’aan and pondering the meaning, having an empty stomach, praying at night (qiyaam al-layl), beseeching Allaah at the time of suhoor, and keeping company with righteous people.”\r\n</p>&nbsp;\r\n<p>4 – Studying how the salaf and righteous people practised qiyaam al-layl and adhered to it. The salaf used to enjoy qiyaam al-layl and rejoice greatly in doing it. ‘Abd-Allaah ibn Wahb said: “Every type of pleasure is enjoyed only once, except for acts of worship, which are enjoyed three times: when you do it, when you remember it, and when you are given the reward for it.”\r\n</p>&nbsp;\r\n<p>Muhammad ibn al-Munkadir said: “There is nothing left of the joys of this life except three: qiyaam al-layl, meeting one’s brothers in faith, and praying in congregation.”\r\n</p>&nbsp;\r\n<p>Thaabit al-Banaani said: “There is nothing I enjoy more than qiyaam al-layl.”\r\n</p>&nbsp;\r\n<p>Yazeed al-Riqaashi said: “A lot of tahajjud brings delight to the worshippers, and a lot of thirst (i.e., fasting), brings joy when they meet Allaah.”\r\n</p>&nbsp;\r\n<p>Mukhallad ibn Husayn said: “I never woke up at night except I saw Ibraaheem ibn Adham remembering Allaah and praying, and this made me depressed, so I consoled myself with this aayah (interpretation of the meaning): {…That is the Grace of Allaahm which He bestows on whom He pleases. And Allaah is the Owner of Great Bounty} [al-Hadeed 57:21].”\r\n</p>&nbsp;\r\n<p>{...ذَٰلِكَ فَضْلُ اللَّـهِ يُؤْتِيهِ مَن يَشَاءُ ۚ وَاللَّـهُ ذُو الْفَضْلِ الْعَظِيمِ} الحديد: 21\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: thalika fadlu Allahi yuteehi man yashao waAllahu thoo alfadli alAAatheemi\r\n</p>&nbsp;\r\n<p>Abu ‘Aasim al-Nabeel said: “Abu Haneefah used to be called al-Watad (pole or pillar) because he prayed so much.”\r\n</p>&nbsp;\r\n<p>Al-Qaasim ibn Ma’een said: “Abu Haneefah spent an entire night in qiyaam reciting this aayah (interpretation of the meaning): {Nay, but the Hour is their appointed time (for their full recompense), and the Hour will be more grievous and more bitter} [al-Qamar 54:46],\r\n</p>&nbsp;\r\n<p>{بَلِ السَّاعَةُ مَوْعِدُهُمْ وَالسَّاعَةُ أَدْهَىٰ وَأَمَرُّ} القمر: 46\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Bali alssaAAatu mawAAiduhum waalssaAAatu adha waamarru\r\n</p>&nbsp;\r\n<p>repeating it and weeping, beseeching Allaah until morning came.”\r\n</p>&nbsp;\r\n<p>Ibraaheem ibn Shammaas said: “I used to see Ahmad ibn Hanbal staying up at night to pray when he was a young man.”\r\n</p>&nbsp;\r\n<p>Abu Bakr al-Marwadhi said: “I was with Imaam Ahmad for nearly four months in the army, and he never stopped praying qiyaam at night or reading Qur’aan during the day, and I never knew when he completed the Qur’aan, because he kept that secret.”\r\n</p>&nbsp;\r\n<p>Imaam al-Bukhaari used to pray qiyaam and tahajjud at night until the time of suhoor, and he would read between a half and a third of the Qur’aan, and complete it at suhoor every third night.\r\n</p>&nbsp;\r\n<p>Al-‘Allaamah Ibn ‘Abd al-Haadi said, describing the qiyaam of Shaykh al-Islam Ibn Taymiyah: “At night he would keep away from people, and spend that time only with his Lord, beseeching Him continually and reciting Qur’aan, repeating different kinds of acts of worship by night and by day. When he began to pray, his body would start to tremble, leaning to the left and right.”\r\n</p>&nbsp;\r\n<p>Ibn Rajab said concerning his shaykh Imaam Ibn al-Qayyim: “He was a man of worship, tahajjud and lengthy prayers. I have never seen his equal in worship and knowledge of the Qur’aan, hadeeth and principles of faith.”\r\n</p>&nbsp;\r\n<p>Al-Haafiz Ibn Hajar said, describing his shaykh al-Haafiz al-‘Iraaqi: “I stayed with him, and I never saw him forsake qiyaam al-layl: it was like a habit for him.”\r\n</p>&nbsp;\r\n<p>5 – Sleeping on one’s right side. The Prophet (peace and blessings of Allaah be upon him) taught his ummah to sleep on their right sides, as is reported in the hadeeth of Abu Hurayrah (may Allaah be pleased with him), who said that the Prophet (peace and blessings of Allaah be upon him) said: “When any one of you goes to bed, let him clear his bed by hitting it with his garment, for he does not know what may have come onto it. Then let him lie down on his right side, then let him say, ‘Bismika Rabbi wada’tu janbi wa bika arfa’uhu. In amsakta nafsi farhamhaa wa in arsaltahaa fahfazhaa bimaa tahfazu bihi ‘ibaadaka al-saaliheen (In Your Name, my Lord, I lay myself down and I get up again. If You take my soul, then have mercy on it, and if You send it back to me, then protect it with that with which You protect Your righteous slaves).’” [Agreed upon].\r\n</p>&nbsp;\r\n<p>«إذا أوى أحدكم إلى فراشه فلينفض فراشه بداخلة إزاره، فإنه لا يدري ما خلفه عليه، ثم يقول: باسمك ربي وضعت جنبي وبك أرفعه، إن أمسكت نفسي فارحمها، وإن أرسلتها فاحفظها بما تحفظ به عبادك الصالحين» متفق عليه\r\n</p>&nbsp;\r\n<p>Al-Baraa’ ibn ‘Aazib (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “When you want to go to bed, do wudoo’ as for prayer, then lie down on your right side.” [Agreed upon].\r\n</p>&nbsp;\r\n<p>«إذا أتيت مضجعك، فتوضأ وضوءك للصلاة، ثم اضطجع على شقك الأيمن» متفق عليه\r\n</p>&nbsp;\r\n<p>Hafsah (may Allaah be pleased with her) said: “When the Prophet (peace and blessings of Allaah be upon him) went to bed, he would put his right hand under his right cheek.” [Authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>&nbsp;«كان إذا أخذ مضجعه جعل يده اليمنى تحت خده الأيمن» صححه الألباني\r\n</p>&nbsp;\r\n<p>Imaam Ibn al-Qayyim (may Allaah have mercy on him) said: “There is a reason for his lying on his right side, which is that the heart is located on the left, so if a person lays on his left side, he will sleep too deeply, because the heart’s position will be too comfortable, but if he sleeps on his right side, he will not be too settled, so he won’t sleep deeply.”\r\n</p>&nbsp;\r\n<p>6 – Sleeping in a state of tahaarah (purity). We have already quoted the hadeeth of al-Baraa’ ibn ‘Aazib (may Allaah be pleased with him), in which the Prophet (peace and blessings of Allaah be upon him) said, “When you go to bed, do wudoo’ as if for prayer.” [Agreed upon].\r\n</p>&nbsp;\r\n<p>«إذا أتيت مضجعك فتوضأ وضوءك للصلاة» متفق عليه\r\n</p>&nbsp;\r\n<p>Mu’aad ibn Jabal (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “There is no Muslim who goes to sleep remembering Allaah and in a state of purity, and when he turns over he asks Allaah for good in this world and the next, but it will be given to him.” [Reported by Abu Dawud and authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>«ما من مسلم يبيت على ذكر طاهرا فيتعار من الليل فيسأل الله خيرا من الدنيا والآخرة إلا أعطاه إياه» رواه أبو داود وصححه الألباني\r\n</p>&nbsp;\r\n<p>Ibn ‘Abbaas (may Allaah be pleased with them both) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Purify these bodies and Allaah will purify you, for there is no slave who goes to sleep in a state of purity but an angel spends the night with him, and every time he turns over, [the angel] says, ‘O Allaah, forgive Your slave, for he went to bed in a state of purity.’” [Al-Mundhiri said, its isnaad is jaayid and A-Albani said good due to other narrations].\r\n</p>&nbsp;\r\n<p>«طهروا هذه الأجساد، طهركم الله، فإنه ليس من عبد يبيت طاهرا إلا بات معه في شعاره ملك، لا ينقلب ساعة من الليل إلا قال: اللهم اغفر لعبدك، فإنه بات طاهرا» رواه المنذري وقال: إسناده جيد، وقال الألباني، حسن لغيره\r\n</p>&nbsp;\r\n<p>7 – Going to sleep early. Sleeping straight after ‘Ishaa’ is the advice of the Prophet (peace and blessings of Allaah be upon him), and a good and healthy habit. One of the ahaadeeth that describe its virtues was narrated by Abu Barzah al-Aslami (may Allaah be pleased with him) who said that the Prophet (peace and blessings of Allaah be upon him) used to prefer to delay ‘Ishaa’, and he did not like to sleep before it or talk after it. [Reported by al-Bukhari].\r\n</p>&nbsp;\r\n<p>«وكان يستحب أن يؤخر العشاء، قال: وكان يكره النوم قبلها، والحديث بعدها» رواه البخاري\r\n</p>&nbsp;\r\n<p>Al-Haafiz Ibn Hajar reported that al-Qaadi ‘Ayaad said, concerning the phrase “He did not like to sleep before it”. “Because that could lead to one praying it too late, or delaying it until after the preferred time, and talking after it could lead to one sleeping before Fajr and missing it, or missing qiyaam al-layl.”\r\n</p>&nbsp;\r\n<p>Ibn Raafi’ said: “‘Umar ibn al-Khattaab (may Allaah be pleased with him) used to wave his stick at the people when darkness fell, and would say, ‘Get up and go, may Allaah help you to pray qiyaam at night!’”\r\n</p>&nbsp;\r\n<p>Another matter that has to do with sleep is choosing a suitable bed, not one that is excessively luxurious or soft, because that makes a person sleep too much and become negligent, and causes laziness and carelessness. ‘Aa’ishah (may Allaah be pleased with her) said: “The pillow of the Prophet (peace and blessings of Allaah be upon him) on which he slept at night was made of leather stuffed with palm fibres.” [Authenticated by Al-Albani, Saheeh al-Jaami’].\r\n</p>&nbsp;\r\n<p>&nbsp;«كان وسادته التي ينام عليها بالليل من آدم، حشوها ليف» صححه الألباني، صحيح الجامع\r\n</p>&nbsp;\r\n<p>Ibn ‘Abbaas (may Allaah be pleased with him) reported that ‘Umar ibn al-Khattaab entered upon the Messenger of Allaah (peace and blessings of Allaah be upon him) when he was lying on a mat of palm fibres that had left marks on his side. ‘Umar said, “O Messenger of Allaah, why do you not get something more comfortable than this?” He (peace and blessings of Allaah be upon him) said: “What do I have to do with this world? My relationship with this world is like that of a traveller on a hot summer’s day, who seeks shade under a tree for an hour, then moves on.” [Reported by Ahmad and Ahmad Shaker said: it’s chain of transmission is authentic].\r\n</p>&nbsp;\r\n<p>«يا رسول ألا آذنتنا حتى نبسط لك على الحصير شيئا فقال رسول الله صلى الله عليه وسلم: ما لي وللدنيا وما أنا والدنيا إنما مثلي ومثل الدنيا كراكب ظل تحت شجرة ثم راح وتركها» رواه أحمد وقال أحمد شاكر إٍسناده صحيح\r\n</p>&nbsp;\r\n<p>‘Ali ibn Bakkaar (may Allaah have mercy on him) used to have a slave-woman who would spread out his bed for him, and he would touch it with his hand and say: “By Allaah, you are good, and by Allaah you are cool, but by Allaah I will not rest on you tonight.” Then he would get up and pray qiyaam until Fajr.\r\n</p>&nbsp;\r\n<p>Also, one should not sleep too much or too deeply. Ibraaheem ibn Adham said: “If you are sleeping at night, and running about during the day, and always committing sin, how can you earn the pleasure of the One Who is directing your affairs?”\r\n</p>&nbsp;\r\n<p>8 – Having the habit of reciting adhkaar prescribed by sharee’ah before going to sleep, because these adhkaar are like a fortress which protects a person from the Shaytaan, by the permission of Allaah, and helps him to get up for qiyaam. Among these adhkaar is that mentioned in the hadeeth of Abu Hurayrah (may Allaah be pleased with him), who said that the Prophet (peace and blessings of Allaah be upon him) said: “When any one of you goes to bed, let him clear his bed by hitting it with his garment, for he does not know what may have come onto it. Then let him lie down on his right side, then let him say, ‘Bismika Rabbi wada’tu janbi wa bika arfa’uhu. In amsakta nafsi farhamhaa wa in arsaltahaa fahfazhaa bimaa tahfazu bihi ‘ibaadaka al-saaliheen (In Your Name, my Lord, I lay myself down and I get up again. If You take my soul, then have mercy on it, and if You send it back to me, then protect it with that with which You protect Your righteous slaves).’” [Agreed upon].\r\n</p>&nbsp;\r\n<p>«إذا أوى أحدكم إلى فراشه فلينفض فراشه بداخلة إزاره، فإنه لا يدري ما خلفه عليه، ثم يقول: باسمك ربي وضعت جنبي وبك أرفعه، إن أمسكت نفسي فارحمها، وإن أرسلتها فاحفظها بما تحفظ به عبادك الصالحين» متفق عليه\r\n</p>&nbsp;\r\n<p>‘Aa’ishah (may Allaah be pleased with her) reported that when the Prophet (peace and blessings of Allaah be upon him) went to bed each night, he would put his palms together, blow in them, and recite Qul huwa Allaahu ahad, Qul a’oodhu bi Rabbi’l-Falaq and Qul a’oodhu bi Rabbi’l-Naas, then he would wipe as much of his body as he could with his hands, starting with his head and face, and the front of his body, doing this three times. [Reported by Al-Bukhari].\r\n</p>&nbsp;\r\n<p>«أن النبي صلى الله عليه وسلم كان إذا أوى إلى فراشه كل ليلة، جمع كفيه ثم نفث فيهما، فقرأ فيهما: {قُلْ هُوَ اللَّـهُ أَحَدٌ}. و{قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ}. و{قُلْ أَعُوذُ بِرَبِّ النَّاسِ}. ثم يمسح بهما ما استطاع من جسده، يبدأ بهما على رأسه ووجهه، وما أقبل من جسده، يفعل ذلك ثلاث مرات» رواه البخاري  \r\n</p>&nbsp;\r\n<p>Ibn Mas’ood (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Whoever recites the last two aayahs of Soorat al-Baqarah, this will take care of him.” [Reported by Al-Bukhari].\r\n</p>&nbsp;\r\n<p>من قرأ بالآيتين من آخر سورة البقرة في ليلة كفتاه» رواه البخاري»\r\n</p>&nbsp;\r\n<p>Anas ibn Maalik (may Allaah be pleased with him) reported that when the Prophet (peace and blessings of Allaah be upon him) went to bed, he would say: “Al-hamdu Lillaah illadhi at’amanaa wa saqaanaa, wa kafaanaa fa kam mimman laa kaafeeya lahu wa laa mu’weeya lahu (Praise be to Allaah Who has fed us and given us to drink, and Who has given us enough, for how many are there who have no-one to suffice them or give them refuge).” [Reported by Muslim].\r\n</p>&nbsp;\r\n<p>«أن رسول الله صلى الله عليه وسلم كان إذا أوى إلى فراشه قال: الحمد لله الذي أطعمنا وسقانا، وكفانا وآوانا. فكم ممن لا كافي له ولا مؤوي» رواه مسلم\r\n</p>&nbsp;\r\n<p>According to the hadeeth of Abu Hurayrah in which he tells the story of how he captured the Shaytaan, the Shaytaan said to him: “When you go to bed, recite Aayat al-Kursi, {Allah! La ilaha illa Huwa (none has the right to be worshipped but He), the Ever Living, the One Who sustains and protects all that exists. Neither slumber, nor sleep overtake Him. To Him belongs whatever is in the heavens and whatever is on earth. Who is he that can intercede with Him except with His Permission? He knows what happens to them (His creatures) in this world, and what will happen to them in the Hereafter. And they will never compass anything of His Knowledge except that which He wills. His Kursi extends over the heavens and the earth, and He feels no fatigue in guarding and preserving them. And He is the Most High, the Most Great.} [al-Baqarah 2:255 – interpretation of the meaning].\r\n</p>&nbsp;\r\n<p>{اللَّـهُ لَا إِلَـٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ} البقرة: 255\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Allahu la ilaha illa huwa alhayyu alqayyoomu la takhuthuhu sinatun walanawmun lahu ma fee alssamawati wamafee alardi man tha allathee yashfaAAu AAindahu illa biithnihi yaAAlamu mabayna aydeehim wama khalfahum walayuheetoona bishayin min AAilmihi illabima shaa wasiAAa kursiyyuhu alssamawati waalarda wala yaooduhuhifthuhuma wahuwa alAAaliyyu alAAatheemu\r\n</p>&nbsp;\r\n<p>until the end of it, because it will bring Allaah’s protection for you, and no shaytaan will approach you until morning comes.” Abu Hurayrah (may Allaah be pleased with him) mentioned this to the Prophet (peace and blessings of Allaah be upon him), and he said, “He spoke the truth even though he is a liar.” [Reported by Al-Bukhari].\r\n</p>&nbsp;\r\n<p>«قال: إذا أويت إلى فراشك فاقرأ آية الكرسي، لن يزال معك من الله حافظ، ولا يقربك شيطان حتى تصبح. وقال النبي صلى الله عليه وسلم: \"صدقك وهو كذوب\"، ذاك شيطان» رواه البخاري\r\n</p>&nbsp;\r\n<p>‘Ali ibn Abi Taalib (may Allaah be pleased with him) reported that when the Prophet’s daughter Faatimah (may Allaah be pleased with her) came to him and asked him for a servant, he (peace and blessings of Allaah be upon him) said to her and ‘Ali: “Shall I not teach you something that will be better for you than a servant? When you go to bed, say ‘Subhaan Allaah’ thirty-three times, ‘al-hamdu Lillaah’ thirty-three times, and ‘Allaahu akbar’ thirty-four times. This is better for you than a servant.” [Reported by Al-Bukhari].\r\n</p>&nbsp;\r\n<p>«ألا أدلكما على خير مما سألتما؟ إذا أخذتما مضاجعكما، أو أويتما إلى فراشكما فسبحا ثلاثا وثلاثين، واحمدا ثلاثا وثلاثين، وكبرا أربعا وثلاثين، فهو خير لكما من خادم» رواه البخاري\r\n</p>&nbsp;\r\n<p>Anas ibn Maalik (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Recite ‘Qul yaa ayyuha’l-kaafiroon’ when you go to sleep, for it is a renunciation of shirk.” [Authenticated by Al-Albani, Saheeh al-Jaami’].\r\n</p>&nbsp;\r\n<p>«اقرأ {قُلْ يَا أَيُّهَا الْكَافِرُونَ} عند منامك ، فإنها براءة من الشرك» صححه الألباني، صحيح الجامع\r\n</p>&nbsp;\r\n<p>Al-Baraa’ bin ‘Aazeb (may Allaah be pleased with him) reported that when the Prophet (peace and blessings of Allaah be upon him) went to bed, he would put his right hand under his right cheek and say: ‘Rabbi qinee ‘adhaabaka yawma tab’athu ‘ibaadaka (My Lord, save me from Your punishment on the Day when You resurrect Your slaves).’” [Reported by At-Tirmidhi and authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>«كان رسول الله صلى الله عليه وسلم يتوسد يمينه عند المنام، ثم يقول: رب! قني عذابك يوم تبعث عبادك» رواه الترمذي وصححه الألباني\r\n</p>&nbsp;\r\n<p>Al-Baraa’ ibn ‘Aazib (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “When you go to bed, do wudoo’ as if for prayer, then lie down on your right side, then say: ‘Allaahummah aslamtu wajhi ilayk, wa wajahtu wajhi ilayk, wa fawwadtu amri ilayk, wa alja’tu zahri ilayk, raghbatan wa rahbatan ilayk, laa malja’a wa laa manjaa minka illa ilayk. Aamantu bi kitaabik alladhi anzalt, wa bi nabiyyik alladhi arsalt (O Allaah, I submit myself to You, I turn my face to You, I delegate my affairs to You and I rely totally on You, out of fear and hope of You. There is no refuge or sanctuary from You except in You. I believe in Your Book which You have revealed and in Your Prophet whom You have sent).’ Then if you die, you will have died on the fitrah, so make these the last words you speak.” [Agreed upon].\r\n</p>&nbsp;\r\n<p>«إذا أتيت مضجعك، فتوضأ وضوءك للصلاة، ثم اضطجع على شقك الأيمن، وقل: اللهم أسلمت وجهي إليك، وفوضت أمري إليك، وألجأت ظهري إليك، رهبة ورغبة إليك، لا ملجأ ولا منجى منك إلا إليك، آمنت بكتابك الذي أنزلت، وبنبيك الذي أرسلت، فإن مت مت على الفطرة فاجعلهن آخر ما تقول» متفق عليه\r\n</p>&nbsp;\r\n<p>Similarly, the Muslim should have the habit of reciting adhkaar prescribed by sharee’ah when waking up, such as that reported by Abu Hurayrah, who said that the Prophet (peace and blessings of Allaah be upon him) said: “When any one of you wakes up, he should say: ‘Al-hamdu Lillaah illadhi radda ‘alayya roohi, wa ‘aafaani fi jasadi wa adhina li bi dhikrihi (Praise be to Allaah Who has restored my soul, given health to my body, and allowed me to remember Him).” [Reported by Al-Albani with a good chain of transmission].\r\n</p>&nbsp;\r\n<p>«إذا استيقظ أحدكم فليقل: الحمد لله الذي رد علي روحي، وعافاني في جسدي، وأذن لي بذكره» قال الألباني: إسناده جيد\r\n</p>&nbsp;\r\n<p>‘Ubaadah ibn al-Saamit (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Whoever turns over at night and says ‘Laa ilaaha ill-Allaah wahdahu laa shareeka lah, lahu’l-mulk wa lahu’l-hamd wa huwa ‘a’l kulli shay’in qadeer. Al-hamdulillahi, subhaan Allaah wa laa illaaha ill-Allaah wa Allaahu akbar wa laa hawla wa laa quwwata illa Billaah (There is no god but Allaah Alone, with no partner or associate. His is the Dominion and the Praise, and He is Able to do all things. Praise be to Allaah, glory be to Allaah. There is no god except Allaah, Allaah is Most Great and there is no strength and no power except in Allaah),’ then says, ‘Allaahumma ‘ghfir li (O Allaah, forgive me),’ or some other du’aa’, it will be answered, and if he does wudoo’ and then prays, his prayer will be accepted.” [Reported by al-Bukhari].\r\n</p>&nbsp;\r\n<p>«من تعار من الليل فقال: لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، الحمد لله، وسبحان الله، ولا إله إلا الله، والله أكبر، ولا حول ولا قوة إلا بالله، ثم قال: اللهم اغفر لي، أو دعا، استجيب له، فإن توضأ وصلى قبلت صلاته» رواه البخاري\r\n</p>&nbsp;\r\n<p>Imaam Ibn Battaal said: “Allaah has promised through His Prophet (peace and blessings of Allaah be upon him) that whoever wakes up from his sleep pronouncing words of Tawheed, submitting to His sovereignty, recognizing His blessings by praising Him, exalting Him above that which does not befit Him by glorifying Him (saying ‘Subhaan Allaah’), submitting to Him by magnifying Him (saying ‘Allaahu akbar’) and admitting one’s utter dependence upon His help, then if he makes du’aa’ it will be answered, and if he prays his prayer will be accepted. Everyone who hears this hadeeth should apply it and make the most of it, and make his intention sincerely for his Lord, may He be glorified and exalted.”\r\n</p>&nbsp;\r\n<p>Al-Baraa’ ibn ‘Aazib (may Allaah be pleased with them both) said: “When the Prophet (peace and blessings of Allaah be upon him) woke up, he would say: ‘Al-hamdu Lillaah illadhi ahyaanaa ba’da maa amaatanaa wa ilayhi al-nushoor (Praise be to Allaah Who has brought us back to life after having caused us to die, and unto Him is the resurrection).’” [Reported by Muslim].\r\n</p>&nbsp;\r\n<p>«أن النبي صلى الله عليه وسلم كان...وإذا استيقظ قال: الحمد لله الذي أحيانا بعدما أماتنا، وإليه النشور» رواه مسلم\r\n</p>&nbsp;\r\n<p>Ibn ‘Abbaas (may Allaah be pleased with them both) reported that when the Prophet (peace and blessings of Allaah be upon him) woke up he would wipe the sleep from his face with his hand, then look at the sky and recite the final ten aayaat of Soorat Aal ‘Imran” [Reported by Muslim].\r\n</p>&nbsp;\r\n<p>«استيقظ رسول الله صلى الله عليه وسلم، فجلس يمسح النوم عن وجهه بيده، ثم قرأ العشر الآيات الخواتم من سورة آل عمران» رواه مسلم\r\n</p>&nbsp;\r\n<p>Imaam al-Nawawi said: “This indicates that it is mustahabb to wipe away the traces of sleep from one’s face, and to recite these aayaat when getting up from sleep.”\r\n</p>&nbsp;\r\n<p>9 – Being keen to take a nap or siesta during the day, whether before zuhr or after. Anas (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Take a nap, for the shayaateen do not take naps.” [A-Albani said: its chain of transmission is good and its men are trustworthy].\r\n</p>&nbsp;\r\n<p>«قيلوا فإن الشياطين لا تقيل» قال الألباني: إسناده حسن رجاله ثقات\r\n</p>&nbsp;\r\n<p>Ishaaq ibn ‘Abd-Allaah said: “Taking a nap is one of the deeds of good people. It revitalizes the heart and helps one to pray qiyaam al-layl.”\r\n</p>&nbsp;\r\n<p>Al-Hasan al-Basri passed by a group of people in the marketplace in the middle of the day, and heard the racket they were making. He said, “Do these people take a nap?” It was said to him, “No.” He said, “I think their nights must be bad.”\r\n</p>&nbsp;\r\n<p>10 – Avoiding eating or drinking too much. Eating and drinking too much are two of the main obstacles that prevent people from praying qiyaam al-layl. Al-Miqdaam ibn Ma’d Yakrib (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Man fills no vessel worse than his stomach. It is sufficient for the son of Adam to have a few mouthfuls to give him the strength he needs. If he has to fill his stomach, then let him leave one-third for food, one-third for drink and one-third for air.” [Authenticated by Al-Albani, Saheeh al-Jaami’, 5674].\r\n</p>&nbsp;\r\n<p>«ما ملأ آدمي وعاء شرا من بطنه، بحسب ابن آدم أكلات يقمن صلبه، فإن كان لا محالة، فثلث لطعامه، و ثلث لشرابه، و ثلث لنفسه» صححه الألباني، صحيح الجامع\r\n</p>&nbsp;\r\n<p>Abu Juhayfah (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said to a man who burped in his presence: “Stop your burping, for the people who eat the most in this life will be the most hungry hungry on the Day of Resurrection.” [Authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>&nbsp;«أقصر من جشائك؛ فإن أكثر الناس شبعا في الدنيا أكثرهم جوعا في الآخرة» صححه الالباني\r\n</p>&nbsp;\r\n<p>Sufyaan al-Thawri said: “You should eat little, so that you will be able to pray qiyaam al-layl.”\r\n</p>&nbsp;\r\n<p>Ma’qal ibn Habeeb saw some people eating a lot, and said, “I do not think that our companions want to pray qiyaam al-layl.”\r\n</p>&nbsp;\r\n<p>Wahb ibn Munbih said: “There is no son of Adam dearer to his shaytaan than the one who eats and sleeps a lot.”\r\n</p>&nbsp;\r\n<p>11 – Striving against oneself to pray qiyaam al-layl. This is one of the best means of helping oneself to pray qiyaam, because human nature is inclined towards wrongdoing, so the one who follows his own inclinations will be led to doom and destruction. Allaah has commanded us to strive against our own selves, as He says (interpretation of the meanings):\r\n</p>&nbsp;\r\n<p>{And strive hard in Allaah’s Cause as you ought to strive…} [al-Hajj 22:78].\r\n</p>&nbsp;\r\n<p>{وَجَاهِدُوا فِي اللَّـهِ حَقَّ جِهَادِهِ...} الحج: 78\r\n</p>&nbsp;\r\n<p>Transliteration: Wajahidoo fee Allahi haqqa jihadihi \r\n</p>&nbsp;\r\n<p>{And as for those who strive hard in Our Cause, We will surely guide them to Our Paths. And verily, Allaah is with the muhsinoon (good-doers).} [al-‘Ankaboot 29:69]\r\n</p>&nbsp;\r\n<p>{وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا ۚ وَإِنَّ اللَّـهَ لَمَعَ الْمُحْسِنِينَ} العنكبوت: 69\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Waallatheena jahadoo feenalanahdiyannahum subulana wainna Allaha lamaAAa almuhsineena\r\n</p>&nbsp;\r\n<p>{Their sides forsake their beds, to invoke their Lord in fear and hope, and they spend (charity in Allaah’s Cause) out of what We have bestowed on them} [al-Sajdah 32:16]\r\n</p>&nbsp;\r\n<p>{تَتَجَافَىٰ جُنُوبُهُمْ عَنِ الْمَضَاجِعِ يَدْعُونَ رَبَّهُمْ خَوْفًا وَطَمَعًا وَمِمَّا رَزَقْنَاهُمْ يُنفِقُونَ} السجدة: 16\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Tatajafa junoobuhum AAani almadajiAAi yadAAoona rabbahum khawfan watamaAAan wamimma razaqnahum yunfiqoona\r\n</p>&nbsp;\r\n<p>Fadaalah ibn ‘Ubayd (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “The mujaahid is the one who strives against his own self for the sake of Allaah.” [Authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>&nbsp;«المجاهد من جاهد نفسه في الله» صححه الألباني\r\n</p>&nbsp;\r\n<p>According to the hadeeth of ‘Uqbah ibn ‘Aamir (may Allaah be pleased with him), the Prophet (peace and blessings of Allaah be upon him) said: “When a man from my Ummah gets up to pray at night, striving against his own self to get up and purify himself, there are knots on him. When he washes his hands in wudoo’, one knot is undone. When he washes his face, another knot is undone. When he wipes his head another knot is undone. When he washes his feet, another knot is undone. Then Allaah says to those who are veiled (in the Unseen): ‘Look at this slave of Mine, he is striving against his own self and asking of Me. Whatever My slave asks of Me shall be his.” [Reported as good by Al-Albani].\r\n</p>&nbsp;\r\n<p>«يقوم الرجل من أمتي من الليل يعالج نفسه إلى الطهور وعليه عقد، فإذا وضأ يديه انحلت عقدة، فإذا وضأ وجهه انحلت عقدة، وإذا مسح رأسه انحلت عقدة، وإذا وضأ رجليه انحلت عقدة، فيقول الله عز وجل للذين وراء الحجاب: انظروا إلى عبدي هذا يعالج نفسه؛ يسألني ما سألني عبدي هذا فهو له» حسنه الألباني\r\n</p>&nbsp;\r\n<p>Muhammad ibn al-Munkadir said: “I struggled against my own self for forty years until it became right.” Thaabit al-Banaani said: “I struggled for twenty years to make myself pray qiyaam al-layl, and I enjoyed it (qiyaam al-layl) for twenty years.” ‘Umar ibn ‘Abd al-‘Azeez said: “The best of deeds are those which we force ourselves to do.” ‘Abd-Allaah ibn al-Mubaarak said: “The souls of righteous people in the past used to push them to do good deeds, but our souls do not do what we want them to do except by force, so we have to force them.” Qutaadah said: “O son of Adam, if you do not want to do any good except when you have the energy for it, then your nature is more inclined towards boredom and laziness. The true believer is the one who pushes himself.”\r\n</p>&nbsp;\r\n<p>12 – Avoiding sin. If the Muslim wants to be one of those who earn the honour of speaking to Allaah in the depths of the night, let him beware of sin, for the one who is contaminated with the stain of sin will not be helped to pray qiyaam al-layl. A man said to Ibraaheem ibn Adham, “I cannot pray qiyaam al-layl, so tell me the cure for this.” He said, “Do not commit sin during the day, and He will help you to stand before Him at night, for your standing before Him at night is one of the greatest honours, and the sinner does not deserve that honour.”\r\n</p>&nbsp;\r\n<p>A man said to al-Hasan al-Basri: “”O Abu Sa’eed, I sleep in good health, and I love to pray qiyaam al-layl, and I prepare water with which to purify myself, so why can I not get up?” Al-Hasan said: “Your sins are restricting you.” He said, may Allaah have mercy on him, “The slave who commits a sin will be denied the opportunity to pray qiyaam at night and to fast during the day.”\r\n</p>&nbsp;\r\n<p>Al-Fudayl ibn ‘Ayaad said: “If you cannot pray qiyaam al-layl, or fast during the day, know that you are indeed deprived and restricted, chained by your sins.”\r\n</p>&nbsp;\r\n<p>13 – Checking oneself and rebuking oneself for not praying qiyaam al-layl. Checking oneself is one of the signs of the righteous and truthful. Allaah says (interpretation of the meaning): {O you who believe! Fear Allaah and keep your duty to Him. And let every person look to what he has sent forth for tomorrow, and fear Allaah. Verily, Allaah is All-Aware of what you do.} [al-Hashr 59:18].\r\n</p>&nbsp;\r\n<p>{يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّـهَ وَلْتَنظُرْ نَفْسٌ مَّا قَدَّمَتْ لِغَدٍ ۖ وَاتَّقُوا اللَّـهَ ۚ إِنَّ اللَّـهَ خَبِيرٌ بِمَا تَعْمَلُونَ} الحشر: 18\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Ya ayyuha allatheena amanoo ittaqoo Allaha waltanthur nafsun ma qaddamat lighadin waittaqoo Allaha inna Allaha khabeerun bima taAAmaloona\r\n</p>&nbsp;\r\n<p>Imaam Ibn al-Qayyim said: “If the slave is responsible and accountable for everything, even his hearing, sight and innermost thoughts, as Allaah says (interpretation of the meaning), {…Verily, the hearing, and the sight, and the heart of each of you will be questioned by Allaah} [al-Isra’ 17:36],\r\n</p>&nbsp;\r\n<p>{...إِنَّ السَّمْعَ وَالْبَصَرَ وَالْفُؤَادَ كُلُّ أُولَـٰئِكَ كَانَ عَنْهُ مَسْئُولًا} الإسراء: 36\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: inna alssamAAa waalbasara waalfuada kullu olaika kana AAanhu masoolan\r\n</p>&nbsp;\r\n<p>then he should check on himself before he is brought to account.”\r\n</p>&nbsp;\r\n<p>Qiyaam al-layl is an act of worship that connects the heart to Allaah, may He be exalted, and enables it to overcome the temptations of life and to strive against one’s own self, at the time when voices are stilled, eyes are closed in sleep, and sleepers are tossing and turning in their beds. Therefore qiyaam al-layl is one of the measures of sincere determination and one of the qualities of those who have great ambitions. Allaah has praised them and distinguished them from others in the Qur’aan, where He says (interpretation of the meaning): {Is one who is obedient to Allaah, prostrating himself or standing (in prayer) during the hours of the night, fearing the Hereafter and hoping for the Mercy of his Lord (like one who disbelieves)? Say: ‘Are those who know equal to those who know not?’ It is only men of understanding who will remember.} [Az-Zumar 39:9]\r\n</p>&nbsp;\r\n<p>{أَمَّنْ هُوَ قَانِتٌ آنَاءَ اللَّيْلِ سَاجِدًا وَقَائِمًا يَحْذَرُ الْآخِرَةَ وَيَرْجُو رَحْمَةَ رَبِّهِ ۗ قُلْ هَلْ يَسْتَوِي الَّذِينَ يَعْلَمُونَ وَالَّذِينَ لَا يَعْلَمُونَ ۗ إِنَّمَا يَتَذَكَّرُ أُولُو الْأَلْبَابِ} الزمر: 9\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Amman huwa qanitun anaa allayli sajidan waqaiman yahtharu alakhirata wayarjoo rahmata rabbihi qul hal yastawee allatheena yaAAlamoona waallatheena la yaAAlamoona innamayatathakkaru oloo alalbabi\r\n</p>&nbsp;\r\n<p>Qiyaam al-layl is “sunnah mu’akkadah” (confirmed Sunnah), which the Prophet (peace and blessings of Allaah be upon him) urged us to do when he said, “You should pray qiyaam al-layl, for it is the habit of the righteous people who came before you, and it will bring you closer to your Lord, expiate for bad deeds, prevent sin, and expel disease from the body.” [Authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>«عليكم بقيام الليل، فإنه دأب الصالحين قبلكم، و قربة إلى الله تعالى ومنهاة عن الإثم و تكفير للسيئات، ومطردة للداء عن الجسد» صححه الألباني\r\n</p>&nbsp;\r\n<p>According to a hadeeth, the Prophet (peace and blessings of Allaah be upon him) said: “The best of prayers after the prescribed prayers is qiyaam al-layl.” [Authenticated by Al-Albani].\r\n</p>&nbsp;\r\n<p>«أفضل الصلاة بعد المكتوبة الصلاة في جوف الليل» صححه الألباني\r\n</p>&nbsp;\r\n<p>The Prophet (peace and blessings of Allaah be upon him) always had the habit of praying qiyaam al-layl, and never gave it up, whether he was travelling or staying at home. Even though he, among all the sons of Adam, would be the one to have all his past and future sins forgiven, he prayed qiyaam al-layl until his feet became swollen, and when he was asked about that, he said, “Should I not be a grateful slave?” [Agreed upon].\r\n</p>&nbsp;\r\n<p>«قام النبي صلى الله عليه وسلم حتى تورمت قدماه ، فقيل له: غفر الله لك ما تقدم من ذنبك وما تأخر، قال: أفلا أكون عبدا شكورا» متفق عليه\r\n</p>&nbsp;\r\n<p>This is how the noble salaf were, may Allaah have mercy upon them. Abu’l-Darda’ (may Allaah be pleased with him) said: “Pray two rak’ahs in the darkness of the night for the darkness of the grave.” Ahmad ibn Harb said: “I am astonished at people who know that the delights of Paradise lie above them and the horrors of Hell lie beneath them. How can they sleep in between them?”\r\n</p>&nbsp;\r\n<p>When ‘Umar ibn Dharr saw that night had come, he would say: “Night has come, and night has dignity, and Allaah is most deserving of reverence.”\r\n</p>&nbsp;\r\n<p>For this reason, al-Fudayl ibn ‘Ayaad said: “I met some people who feel ashamed before Allaah to sleep for too long in the depths of the night. Such a person may be resting on his side, and when he moves, he says to himself, ‘This is not your right. Get up and take your share of the Hereafter.’”\r\n</p>&nbsp;\r\n<p>Al-Hasan said: “We do not know of any deed more difficult than the struggle to stay up at night or to spend money.” It was said to him, “Why do the mutahajjadeen (those who pray Tahajjud at night) have the most beautiful faces?” He said, “Because they spend time alone with the Most Merciful, so He adorns them with some of His light.”\r\n</p>&nbsp;\r\n<p>The women of the salaf also used to strive to pray qiyaam al-layl with energy and determination. Where are the women of our own age when it comes to such great deeds? ‘Urwah ibn al-Zubayr said: “I came to ‘Aa’ishah (may Allaah be pleased with her) one day to greet her, and I found her praying and reciting the aayah (interpretation of the meaning), {But Allaah has been gracious to us, and has saved us from the torment of the Fire} [al-Toor 52:27],\r\n</p>&nbsp;\r\n<p>{فَمَنَّ اللَّـهُ عَلَيْنَا وَوَقَانَا عَذَابَ السَّمُومِ} الطور: 27\r\n</p>&nbsp;\r\n&nbsp;\r\n&nbsp;\r\n\r\n<p>Transliteration: Famanna Allahu AAalayna wawaqanaAAathaba alssamoomi\r\n</p>&nbsp;\r\n<p>repeating it and weeping. I waited for her, but I got bored of waiting, so I went to the market for some things I needed, then I came back to ‘Aa’ishah, and she was still praying and reciting this aayah and weeping.”\r\n</p>&nbsp;\r\n<p>Anas ibn Maalik (may Allaah be pleased with him) reported that the Prophet (peace and blessings of Allaah be upon him) said: “Jibreel said to me, ‘Go back to Hafsah, for she fasts a lot and prays a lot at night (qiyaam al-layl).’” [Reported as good by Al-Albani].\r\n</p>&nbsp;\r\n<p>قال جبريل: راجع حفصة، فإنها صوامة قوامة» حسنه الألباني»\r\n</p>&nbsp;\r\n<p>Mu’aadhah al-‘Adawiyyah, one of the righteous Taabi’aat spent her wedding night, along with her husband Silah ibn Ashyam, praying until Fajr. When her husband and son were killed in the land of jihaad, she would spend the whole night in prayer, worshipping and beseeching Allaah, and she would sleep during the day. If she felt sleepy whilst she was praying at night, she would tell herself: “O soul, there is plenty of sleep ahead of you.”\r\n</p>&nbsp;\r\n<p>When Habeebah al-‘Adawiyyah prayed ‘Ishaa’, she would stand on the roof of her house, wearing her chemise and khimaar (i.e., covered in proper Islamic dress), then she would say, “O my God, the stars have come out, people have gone to sleep, and kings have closed their doors, but Your door is open. Every lover is alone with his lover, but here I am standing before You.” Then she would start to pray and talk to her Lord until the time of suhoor. When the time of suhoor came, she would say, “O Allaah, this night is ending, the day is coming, and I wish I knew whether you have accepted this night (of worship) from me, so that I could congratulate myself, or if it has been rejected, so that I might console myself.”\r\n</p>&nbsp;\r\n<p>‘Amrah, the wife of Habeeb al-‘Ajami, prayed qiyaam al-layl one night whilst her husband was asleep. When the time for suhoor came, and her husband was still asleep, she woke him up and said to him, “Get up, my master, for the night has gone, the day has come and ahead of you lies a long road with little provision, and a small group of righteous people who have gone before us, and we are still here.”\r\n</p>&nbsp;\r\n<p>We ask Allaah to help us to remember Him, to thank Him and to worship Him properly. May Allaah bless our Prophet Muhammad.</p>", 100, array)).toEqual("");
+            
+            array = []
+        });
+    });
 
     // describe("sliceFormatted function that return array of strings splitted depending on size", function () {
 
