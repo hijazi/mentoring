@@ -13,11 +13,15 @@
  			if (isNaN(size)) return "";
  			if (size <= 0) return "";
  			if (typeof text === "string" || text instanceof String) {
- 				var firstSpace;
+ 				var firstSpace, hadIntialSpace = false;
 				// check if text has at least one word shorter than size to cut
+ 				if ((firstSpace = text.indexOf(' ')) === 0){
+ 					text = text.slice(1);
+ 					hadIntialSpace = true;
+ 				}
  				firstSpace = text.indexOf(' ');
  				if ((firstSpace <= size) && ((firstSpace !== -1) || (text && (text.length <= size)))) {
- 					if (text.length === size){
+ 					if (text.length <= size){
  						return text;
  					}
 					// actual work
@@ -27,6 +31,7 @@
  					if (lastspace !== -1) {
  						text = text.slice(0, lastspace);
  					}
+ 					text = (hadIntialSpace === true ? ' '+text : text);
  				} else {
  					text = "";
  				};
@@ -129,8 +134,6 @@
  		// 			}
  		// 			remainingSize = 0;
  		// 			var plainPushed = this.getPlainText(textToPush);
-			// 		console.log("\n\n\n\n\n\n\nplain pushed.length:"+ plainPushed.length);
-			// 		console.log("++++++++++++++++++++++++++++++++++++plainPushed:"+plainPushed);
  		// 			textArray.push(textToPush);
  		// 			text = text.slice(pivot);
  		// 			return text;
@@ -139,8 +142,6 @@
  		// 			remainingSize = 0;
  		// 			pivot = regEx.lastIndex;
  		// 			var plainPushed = this.getPlainText(textToPush);
-			// 		console.log("\n\n\n\n\n\n\nplain pushed.length:"+ plainPushed.length);
-			// 		console.log("++++++++++++++++++++++++++++++++++++plainPushed:"+plainPushed);
  		// 			textArray.push(text.slice(0, pivot));
  		// 			text = text.slice(pivot);
  		// 			return text;
@@ -156,8 +157,6 @@
  		// 	var pivot = lastMatchEnd + terminatingplain.length;
  		// 	var textPost = text.slice(0,pivot);
  		// 	var plainPushed = this.getPlainText(textToPush);
-			// 		console.log("\n\n\n\n\n\n\nplain pushed.length:"+ plainPushed.length);
-			// 		console.log("++++++++++++++++++++++++++++++++++++plainPushed:"+plainPushed);
  		// 	textArray.push(textToPush);
  		// 	text = text.slice(pivot);
  		// 	return text;
@@ -271,7 +270,7 @@
 			return text;
 		},
 		handleTextAfter: function(text, size, textArray) {
-
+			debugger;
 			var regEx = /(&([^;]+);|\r?\n|\r|(<([^>]+)>))/ig,
 			lastMatchEnd = 0,
 			remainingSize = size,
@@ -286,25 +285,25 @@
 				remainingText = this.charactersTruncate(text.slice(lastMatchEnd), remainingSize);
 				textToPush = text.slice(0, lastMatchEnd) + remainingText;
 				textArray.push(textToPush);
-				console.log("textToPush:"+ textToPush);
-				console.log("\n\n\n\n\n\n\nplain pushed"+ this.getPlainText(textToPush).length);
-				console.log("text.length:"+text.length);
+				// console.log("textToPush:"+ textToPush);
+				// console.log("\n\n\n\n\n\n\nplain pushed"+ this.getPlainText(textToPush).length);
+				// console.log("text.length:"+text.length);
 				text = text.slice(textToPush.length);
 			}
 			while(text.length > 50){
 				textToPush = this.charactersTruncate(text, size);
 				text = text.slice(textToPush.length);
-				console.log("textToPush:"+ textToPush);
-				console.log("*************************************************************\n\n\n\n\n\n\nplain pushed"+ this.getPlainText(textToPush).length);
-				console.log("text.length:"+text.length);
+				// console.log("textToPush:"+ textToPush);
+				// console.log("*************************************************************\n\n\n\n\n\n\nplain pushed"+ this.getPlainText(textToPush).length);
+				// console.log("text.length:"+text.length);
 				textArray.push(textToPush);
 			}
-			console.log("text at last:"+text);
+			// console.log("text at last:"+text);
 			return text;
 
 		},
 		genericSlice: function (text, size, textArray) {
-			var match, textInside,	plainText, plainLength,	terminatingPlain, textToPush, reaminingLength, pivot
+			var match = null, textInside,	plainText, plainLength,	terminatingPlain, textToPush, reaminingLength, pivot
 			,	remainingSize = size
 			,	lastMatchEnd = 0
 			,	openDepth = 0
@@ -319,68 +318,72 @@
 			if (text.length < 50){
 				return "";
 			}
-			while ((match = regEx.exec(text)) !== null) {
-				i++;
-				if (i > 100000){
-					console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%i:"+i);
-					break;
-
+			do {
+				if (lastMatchEnd === 5136){
+					debugger;
 				}
-				textInside = text.slice(lastMatchEnd, match.index);
-				plainText = this.getPlainText(textInside);
-				
-				plainLength = plainText.length;
-				if (plainLength < remainingSize) {
-					remainingSize -= plainLength;
-				} else if (plainLength >= remainingSize) {
-					terminatingPlain = this.charactersTruncate(plainText, remainingSize);
-					if (textInside === terminatingPlain){
-						lastMatchEnd = regEx.lastIndex;
-						pivot = lastMatchEnd;
-					} else{
-						textToPush = text.slice(0, lastMatchEnd) + terminatingPlain;
-						pivot = lastMatchEnd + terminatingPlain.length;
-					}
-					initialTextToPush = text.slice(0, pivot);
-					initialText = text.slice(pivot);
-					tagsToClose = this.getClosingTags(initialText, openDepth);
-					textToPush = initialTextToPush + tagsToClose;
-					console.log("textToPush:"+ textToPush);
-					var plainPushed = this.getPlainText(textToPush);
-					console.log("\n\n\n\n\n\n\nplain pushed.length:"+ plainPushed.length);
-					console.log("++++++++++++++++++++++++++++++++++++plainPushed:"+plainPushed);
-					textArray.push(textToPush);
-					tagsToOpen = openTags.join("");
-					text = tagsToOpen + initialText;
-					console.log("text.length:"+text.length);
-					text = this.fixTextFormatting(text);
-					remainingSize = size;
-					if (text.length > 50){
-						this.genericSlice(text, size, textArray);	
-					} else{
+				match = regEx.exec(text);
+
+				if (match !== null){
+					i++;
+					if (i > 10000){
+						// console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%i:"+i);
 						break;
-					}
 
+					}
+					textInside = text.slice(lastMatchEnd, match.index);
+					plainText = this.getPlainText(textInside);
 					
+					plainLength = plainText.length;
+					if (plainLength < remainingSize) {
+						remainingSize -= plainLength;
+					} else if (plainLength >= remainingSize) {
+						terminatingPlain = this.charactersTruncate(plainText, remainingSize);
+						if (textInside === terminatingPlain){
+							lastMatchEnd = regEx.lastIndex;
+							pivot = lastMatchEnd;
+						} else{
+							// textToPush = text.slice(0, lastMatchEnd) + terminatingPlain;
+							pivot = lastMatchEnd + terminatingPlain.length;
+						}
+						initialTextToPush = text.slice(0, pivot);
+						initialText = text.slice(pivot);
+						tagsToClose = this.getClosingTags(initialText, openDepth);
+						textToPush = initialTextToPush + tagsToClose;
+						// console.log("textToPush:"+ textToPush);
+						var plainPushed = this.getPlainText(textToPush);
+						console.log("\n\n\n\n\n\n\nplain pushed.length:"+ plainPushed.length);
+						console.log("++++++++++++++++++++++++++++++++++++plainPushed:"+plainPushed);
+						textArray.push(textToPush);
+						tagsToOpen = openTags.join("");
+						text = tagsToOpen + initialText;
+						// console.log("text.length:"+text.length);
+						text = this.fixTextFormatting(text);
+						remainingSize = size;
+						openTags = [];
+						regEx.lastIndex = 0;
+						continue;					
+					}
+					if (this.tagType(match[0]) === "open") {
+						openDepth++;
+						openTags.push(match[0]);
+					} else if ((this.tagType(match[0]) === "close") && (openDepth > 0)) {
+						openDepth--;
+						openTags.pop();
+					} else {
+					}
+					lastMatchEnd = regEx.lastIndex;
 				}
-				if (this.tagType(match[0]) === "open") {
-					openDepth++;
-					openTags.push(match[0]);
-				} else if ((this.tagType(match[0]) === "close") && (openDepth > 0)) {
-					openDepth--;
-					openTags.pop();
-				} else {
-					// console.log("match:" + match[0] + "index:" + match.index);
-				}
-				lastMatchEnd = regEx.lastIndex;
-			}
-			if (i>10000){
-				console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%i:"+i);
-				return "";
-			}
+			} while (match != null);
+			// if (i>1000){
+			// 	// console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%i:"+i);
+			// 	return "";
+			// }
+			debugger;
+			console.log("text.len:"+text.length+";LME:"+lastMatchEnd+"\n\n\n\n\n\n\nText:"+text);
 			text = this.handleTextAfter(text, size, textArray);
 			textArray.push(text);
-			console.log("text: "+ text);
+			// console.log("text: "+ text);
 			return text;
 		},
 		getSplitData: function(text, size) {
